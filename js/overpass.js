@@ -85,7 +85,7 @@ api.loadShell = function() {
     map.addLayer(api.layer.outlines);
 
   $.ajax({
-    url: "http://overpass.osm.rambler.ru/cgi/interpreter?data=" + encodeURIComponent(api.tagShell()),
+    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()),
     type: 'GET',
     crossDomain: true,
     success: function(data) {
@@ -108,7 +108,7 @@ api.loadBuilding = function(id) {
   }
 
   $.ajax({
-    url: "http://overpass.osm.rambler.ru/cgi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
+    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
     type: 'GET',
     crossDomain: true,
     success: function(data) {
