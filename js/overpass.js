@@ -14,15 +14,23 @@ api.building;                   //building
  */
 
 api.tagShell = function() {
-  var b = map.getBounds();
-  var boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
-          b.getNorthWest().lat + ',' + b.getSouthEast().lng + ');';
-
+  var boundary = '';
+// Bounding boxes just doesn't work in densely mapped area...
+// So except when zoomed, just get the whole world !
+  if (map.getZoom() > 13) {
+    var b = map.getBounds();
+    boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
+            b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
+  }
+  return 'relation["type"="building"]' + boundary + '; way(r:"outer")["level"="0"]->.x; ( rel(bw.x);  node(w.x); .x; ); out;';
+/*
   return '(' +
-          'way["level"="0"]' + boundary +
-          'rel(bw)->.relations;node(w);' +
+          'relation["type"="building"]' + boundary + ';' +
+          'way(r:"outer")["level"="0"];' +
+          '>;' +
           ');' +
           'out;';
+*/
 };
 
 api.tagBuilding = function(id) {
@@ -39,7 +47,7 @@ api.tagBuilding = function(id) {
 api.query = function() {
   if (map.layer === 1) {
     //download elements for zoom 10+
-    if (map.getZoom() > 9) {
+    if (map.getZoom() > 1) {
       $('.leaflet-control-requery-info').html(translations['Click to load buildings']);
       //api.loadShell();
       if (map.getZoom() < 16) {
@@ -164,7 +172,7 @@ api.parseShell = function(data) {
         name = $(this).attr("v");
     });
 
-    if (shell != null) {
+    if (shell != null && outlines[shell] != null) {
       outlines[shell].relationId = $(this).attr("id");
       outlines[shell].name = name;
       if (!containsId(api.shells, shell)) {
