@@ -1,16 +1,5 @@
 <!DOCTYPE html>
-<?php
-include('i18n.php');
 
-function __($token) {
-  global $translation;
-  $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-  if (!array_key_exists($token, $translation) || !array_key_exists($lang, $translation[$token]))
-    return $token;
-  else
-    return $translation[$token][$lang];
-}
-?>
 <html>
   <head>
     <meta charset="utf-8">
@@ -56,19 +45,7 @@ function __($token) {
         <h3></h3>
         <div id="indoor-escape"><button class="btn"><span class="typcn typcn-backspace"><span><span class="btn-text"></span></button></div>
         <div id="indoor-levels"></div>
-        <select class="input-medium" id="indoor-categories">
-          <option value="All"><?php echo __('All'); ?></option>
-          <option value="Fashion"><?php echo __('Fashion'); ?></option>
-          <option value="Home"><?php echo __('Home'); ?></option>
-          <option value="Electronics"><?php echo __('Electronics'); ?></option>
-          <option value="Health"><?php echo __('Health'); ?></option>
-          <option value="Food"><?php echo __('Food'); ?></option>
-          <option value="Service"><?php echo __('Service'); ?></option>
-          <option value="Gastronomy"><?php echo __('Gastronomy'); ?></option>
-          <option value="Sport"><?php echo __('Sport'); ?></option>
-          <option value="Entertainment"><?php echo __('Entertainment'); ?></option>
-          <option value="Other"><?php echo __('Other'); ?></option>
-        </select>
+      
         <div id="indoor-rooms"></div>
       </div>
 
@@ -105,24 +82,6 @@ function __($token) {
 
     <script>
       var translations = {
-        'Fashion': '<?php echo __('Fashion'); ?>',
-        'Home': '<?php echo __('Home'); ?>',
-        'Electronics': '<?php echo __('Electronics'); ?>',
-        'Health': '<?php echo __('Health'); ?>',
-        'Food': '<?php echo __('Food'); ?>',
-        'Service': '<?php echo __('Service'); ?>',
-        'Gastronomy': '<?php echo __('Gastronomy'); ?>',
-        'Sport': '<?php echo __('Sport'); ?>',
-        'Entertainment': '<?php echo __('Entertainment'); ?>',
-        'Other': '<?php echo __('Other'); ?>',
-        'Open in OSM': '<?php echo __('Open in OSM'); ?>',
-        'Enter': '<?php echo __('Enter'); ?>',
-        'Empty floor': '<?php echo __('Empty floor'); ?>',
-        'None on this floor': '<?php echo __('None on this floor'); ?>',
-        'Type': '<?php echo __('Type'); ?>',
-        'Close': '<?php echo __('Close'); ?>',
-        'Click to load buildings': '<?php echo __('Click to load buildings'); ?>',
-        '<strong>Zoom in</strong> to load buildings': '<?php echo __('<strong>Zoom in</strong> to load buildings'); ?>'
       };
     </script>
     <script src="js/start.js"></script>
@@ -131,7 +90,6 @@ function __($token) {
     <script src="js/overpass.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
-    <!--<iframe src="#" width="0" height="0" id='josm-iframe'></iframe>-->
   </body>
 </html>
 
