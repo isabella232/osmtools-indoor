@@ -22,15 +22,7 @@ api.tagShell = function() {
     boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
             b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
   }
-  return 'relation["type"="building"]' + boundary + '; way(r:"outer")["level"="0"]->.x; ( rel(bw.x);  node(w.x); .x; ); out;';
-/*
-  return '(' +
-          'relation["type"="building"]' + boundary + ';' +
-          'way(r:"outer")["level"="0"];' +
-          '>;' +
-          ');' +
-          'out;';
-*/
+  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
 };
 
 api.tagBuilding = function(id) {
@@ -148,6 +140,8 @@ function containsId(array, object) {
 api.parseShell = function(data) {
   var nodes = new Array();
   var outlines = new Array();
+  var buildingId = new Array();
+  var names = new Array();
 
   $(data).find('node').each(function() {
     nodes[$(this).attr("id")] = new L.LatLng($(this).attr("lat"), $(this).attr("lon"));
@@ -163,18 +157,22 @@ api.parseShell = function(data) {
 
   $(data).find('relation').each(function() {
     var shell, name;
+    var relationId = $(this).attr("id");
     $(this).find('member').each(function() {
-      if ($(this).attr("type") == "way" && $(this).attr("role") == "outer")
+      if ($(this).attr("type") == "relation" && /^level/.test($(this).attr("role"))) 
+        buildingId[$(this).attr("ref")] = relationId;
+      if ($(this).attr("type") == "way" && $(this).attr("role") == "shell")
         shell = $(this).attr("ref");
     });
     $(this).find('tag').each(function() {
       if ($(this).attr("k") == "name")
         name = $(this).attr("v");
+        names[relationId] = name;
     });
 
     if (shell != null && outlines[shell] != null) {
-      outlines[shell].relationId = $(this).attr("id");
-      outlines[shell].name = name;
+      outlines[shell].relationId = (typeof buildingId[$(this).attr("id")] == 'undefined') ? $(this).attr("id") : buildingId[$(this).attr("id")] ;
+      outlines[shell].name = (typeof buildingId[$(this).attr("id")] == 'undefined') ? name : names[buildingId[$(this).attr("id")]];
       if (!containsId(api.shells, shell)) {
         api.shells.push(shell);
         outlines[shell].draw();
@@ -380,7 +378,7 @@ api.parseBuilding = function(data) {
         var role = $(this).attr("role");
         if (type == "relation")
           levels.push(relations[$(this).attr("ref")]);
-        if (type == "way" && role == "outer")
+        if (type == "way" && role == "shell")
           shell = $(this).attr("ref");
       });
 
@@ -392,7 +390,7 @@ api.parseBuilding = function(data) {
   //finish
   if (api.building != undefined) {
     api.building.drawLevelSwitcher();
-    if (api.building.drawLevel(0)) {
+    if (api.building.drawLevel()) {
 
 
       //$('#indoor-map').attr({"class": 'span10'});

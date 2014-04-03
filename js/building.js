@@ -56,20 +56,26 @@ building.building = function(id, name, levels) {
   this.levels = levels;
   this.shell;
 
-  this.currentLevel = 0;
   this.currentType = 'All';
+
+  this.getLevelIds = function() {
+    var arr = [];
+    this.levels.forEach(function(l){
+        arr.push(l.level);
+    });
+    return arr.sort();
+  }
+
+  this.currentLevel = this.getLevelIds()[0];
 
   /** Return level n **/
   this.getLevel = function(n) {
-    for (var i in api.building.levels) {
-      var level = api.building.levels[i];
-      if (level.level == n)
-        return level;
-    }
+    return this.levels.filter(function(l) l.level == n).pop();
   }
 
   /** Draw level n and write list of rooms **/
   this.drawLevel = function(n) {
+    if (typeof n === 'undefined') { n = this.currentLevel; }
     var level = this.getLevel(n);
     if (level != undefined) {
       level.draw();
