@@ -171,13 +171,20 @@ api.parseShell = function(data) {
     });
 
     if (shell != null && outlines[shell] != null) {
-      outlines[shell].relationId = (typeof buildingId[$(this).attr("id")] == 'undefined') ? $(this).attr("id") : buildingId[$(this).attr("id")] ;
-      outlines[shell].name = (typeof buildingId[$(this).attr("id")] == 'undefined') ? name : names[buildingId[$(this).attr("id")]];
+      outlines[shell].relationId = $(this).attr("id") ;
+      outlines[shell].name = name;
       if (!containsId(api.shells, shell)) {
         api.shells.push(shell);
-        outlines[shell].draw();
       }
     }
+  });
+  api.shells.forEach(function(sid){
+    var o = outlines[sid];
+    if (typeof buildingId[o.relationId] != 'undefined') {
+      o.relationId = buildingId[o.relationId];
+      o.name = names[o.relationId];
+    } ;
+    o.draw();
   });
 }
 
