@@ -2,21 +2,9 @@ var layers = {};
 
 layers.attrib = ' &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 
-layers.skobbler = new L.tileLayer(
-    'http://tiles1.skobbler.net/osm_tiles2/{z}/{x}/{y}.png',
-    { attribution: layers.attrib, maxZoom: 21, opacity:0.6 });
-layers.mapquest = new L.tileLayer(
-    'http://otile2.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png',
-    { attribution: layers.attrib, maxZoom: 18, opacity:0.8 });
-layers.foursq = new L.tileLayer(
-    'https://dnv9my2eseobd.cloudfront.net/v3/foursquare.map-0y1jh28j/{z}/{x}/{y}.png',
-    { attribution: layers.attrib, maxZoom: 17 });
 layers.osmfr = new L.tileLayer(
     'http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-    { attribution: layers.attrib, maxZoom: 20, opacity:0.5 }); 
-layers.osmapa = new L.tileLayer(
-    'http://{s}.osm.trail.pl/osmapa.pl/{z}/{x}/{y}.png',
-    { attribution: layers.attrib, maxZoom: 18, opacity:0.8 }); 
+    { attribution: layers.attrib, maxZoom: 22, maxNativeZoom: 20, opacity:0.5 }); 
 layers.osm = new L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     { attribution: layers.attrib, maxZoom: 18, opacity:0.8 });
@@ -28,12 +16,12 @@ layers.osm = new L.tileLayer(
 var map = {};
 $(document).ready(function() {
     map = L.map('map', {
-        center: [localStorage['indoor-lat'] !== undefined ? localStorage['indoor-lat'] : 52.019,
-                localStorage['indoor-lng'] !== undefined ? localStorage['indoor-lng'] : 20.676],
-        zoom: localStorage['indoor-zoom'] !== undefined ? localStorage['indoor-zoom'] :6,
+        center: [localStorage['indoor-lat'] !== undefined ? localStorage['indoor-lat'] : 50.60986,
+                localStorage['indoor-lng'] !== undefined ? localStorage['indoor-lng'] : 3.13809],
+        zoom: localStorage['indoor-zoom'] !== undefined ? localStorage['indoor-zoom'] : 10,
         layers: [layers.osmfr, api.layer.outlines],
         minZoom: 3,
-        attributionControl: false
+        attributionControl: true
     });
     L.control.scale().addTo(map);
     map.query = L.control.requery();

@@ -14,15 +14,15 @@ api.building;                   //building
  */
 
 api.tagShell = function() {
-  var b = map.getBounds();
-  var boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
-          b.getNorthWest().lat + ',' + b.getSouthEast().lng + ');';
-
-  return '(' +
-          'way["level"="0"]' + boundary +
-          'rel(bw)->.relations;node(w);' +
-          ');' +
-          'out;';
+  var boundary = '';
+// Bounding boxes just doesn't work in densely mapped area...
+// So except when zoomed, just get the whole world !
+  if (map.getZoom() > 13) {
+    var b = map.getBounds();
+    boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
+            b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
+  }
+  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
 };
 
 api.tagBuilding = function(id) {
@@ -39,7 +39,7 @@ api.tagBuilding = function(id) {
 api.query = function() {
   if (map.layer === 1) {
     //download elements for zoom 10+
-    if (map.getZoom() > 9) {
+    if (map.getZoom() > 1) {
       $('.leaflet-control-requery-info').html(translations['Click to load buildings']);
       //api.loadShell();
       if (map.getZoom() < 16) {
@@ -140,6 +140,8 @@ function containsId(array, object) {
 api.parseShell = function(data) {
   var nodes = new Array();
   var outlines = new Array();
+  var buildingId = new Array();
+  var names = new Array();
 
   $(data).find('node').each(function() {
     nodes[$(this).attr("id")] = new L.LatLng($(this).attr("lat"), $(this).attr("lon"));
@@ -156,23 +158,35 @@ api.parseShell = function(data) {
 
   $(data).find('relation').each(function() {
     var shell, name;
+    var relationId = $(this).attr("id");
     $(this).find('member').each(function() {
-      if ($(this).attr("type") == "way" && $(this).attr("role") == "outer")
+      if ($(this).attr("type") == "relation" && /^level/.test($(this).attr("role"))) 
+        buildingId[$(this).attr("ref")] = relationId;
+      if ($(this).attr("type") == "way" && $(this).attr("role") == "shell")
         shell = $(this).attr("ref");
     });
     $(this).find('tag').each(function() {
       if ($(this).attr("k") == "name")
         name = $(this).attr("v");
+        names[relationId] = name;
     });
 
-    if (shell != null) {
-      outlines[shell].relationId = $(this).attr("id");
+    if (shell != null && outlines[shell] != null) {
+      outlines[shell].relationId = $(this).attr("id") ;
       outlines[shell].name = name;
       if (!containsId(api.shells, shell)) {
         api.shells.push(shell);
         outlines[shell].draw();
       }
     }
+  });
+  api.shells.forEach(function(sid){
+    var o = outlines[sid];
+    if (typeof buildingId[o.relationId] != 'undefined') {
+      o.relationId = buildingId[o.relationId];
+      o.name = names[o.relationId];
+    } ;
+    o.draw();
   });
 }
 
@@ -373,7 +387,7 @@ api.parseBuilding = function(data) {
         var role = $(this).attr("role");
         if (type == "relation")
           levels.push(relations[$(this).attr("ref")]);
-        if (type == "way" && role == "outer")
+        if (type == "way" && role == "shell")
           shell = $(this).attr("ref");
       });
 
@@ -385,7 +399,7 @@ api.parseBuilding = function(data) {
   //finish
   if (api.building != undefined) {
     api.building.drawLevelSwitcher();
-    if (api.building.drawLevel(0)) {
+    if (api.building.drawLevel()) {
 
 
       //$('#indoor-map').attr({"class": 'span10'});

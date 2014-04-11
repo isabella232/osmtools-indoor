@@ -49,31 +49,36 @@
     this.levels = levels;
     this.shell;
 
-    this.currentLevel = 0;
-    this.currentType = 'All';
+  this.currentType = 'All';
 
-    /** Return level n **/
-    this.getLevel = function(n) {
-      for (var i in api.building.levels) {
-        var level = api.building.levels[i];
-        if (level.level == n)
-          return level;
-      }
+  this.getLevelIds = function() {
+    var arr = [];
+    this.levels.forEach(function(l){
+        arr.push(l.level);
+    });
+    return arr.sort();
+  }
+  this.currentLevel = this.getLevelIds()[0];
+
+  /** Return level n **/
+  this.getLevel = function(n) {
+    return this.levels.filter(function(l) l.level == n).pop();
+  }
+
+  /** Draw level n and write list of rooms **/
+  this.drawLevel = function(n) {
+    if (typeof n === 'undefined') { n = this.currentLevel; }
+    var level = this.getLevel(n);
+    if (level != undefined) {
+      level.draw();
+      $('#indoor-rooms').html(level.list());
+      api.building.currentLevel = n;
+      return true;
     }
-
-    /** Draw level n and write list of rooms **/
-    this.drawLevel = function(n) {
-      var level = this.getLevel(n);
-      if (level != undefined) {
-        level.draw();
-        $('#indoor-rooms').html(level.list());
-        api.building.currentLevel = n;
-        return true;
-      }
-      alert("Something went wrong (no level " + n + ")!");
-      api.loadShell();
-      return false;
-    };
+    alert("Something went wrong (no level " + n + ")!");
+    api.loadShell();
+    return false;
+  };
 
     /**
      * Draw level switcher
