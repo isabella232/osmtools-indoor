@@ -45,6 +45,13 @@
         'it' : 'Contatti',
         'pl' : 'Kontakt'
     },
+    'All' :{
+        'de' : 'Alle',
+        'fr' : 'Tout',
+        'it' : 'Tutti',
+        'pl' : 'Wszystko'
+    },
+    
     'More' :{
         'de' : 'Mehr',
         'fr' : 'Plus',

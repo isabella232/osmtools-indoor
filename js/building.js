@@ -249,6 +249,9 @@
               .on('click', function() {
                 helper.modal();
               });
+if (this.label() != null) {
+L.marker(this.polygon.getCenter(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
+} ;
       if (this.type == "corridor")
         this.polygon.bringToBack();
 
@@ -277,11 +280,15 @@
     }
 
     //formatted label
-    this.label = function() {
+    this.label = function(color = true) {
+      var txt = "";
+      if (color) { txt = '<span style="color:' + this.color() + '">■</span> ' } ;
+      if (this.name != undefined && this.ref != undefined)
+        return txt + this.name + ' (' + this.ref + ')';
       if (this.name == undefined && this.ref != undefined)
-        return '<span style="color:' + this.color() + '">■</span> ' + this.ref;
+        return txt + this.ref;
       if (this.name != undefined)
-        return '<span style="color:' + this.color() + '">■</span> ' + this.name;
+        return txt + this.name;
       return null;
     }
 
