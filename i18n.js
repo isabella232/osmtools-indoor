@@ -2,7 +2,23 @@
 /**
  *  KEEP alphabetic order 
  */
-
+	function translate(token) {
+		var result ;
+		if (navigator.browserLanguage){
+			var language = navigator.browserLanguage;
+		}else{
+			var language = navigator.language; 
+		}
+		if(language.indexOf('en') > -1){
+			return token;
+		}
+		$.each(translation[token], function(k,v){
+			if(language.indexOf(k) > -1){
+				result = v ;
+			}
+		});
+		return result;
+	}
 	var translation = {
     /* 
      * Website 

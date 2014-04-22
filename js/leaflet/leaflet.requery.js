@@ -50,7 +50,7 @@
         L.DomUtil.addClass(controlContainer, 'has-leaflet-pan-control');
       }
 
-      $("<span class='leaflet-control-requery-info'>"+translations['Click to load buildings']+"</span>").insertAfter("#map");
+      $("<span class='leaflet-control-requery-info'>"+translate('Click to load buildings')+"</span>").insertAfter("#map");
       
       return container;
     },

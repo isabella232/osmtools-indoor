@@ -91,7 +91,7 @@
 
       //add text
       $('#indoor-navigation h3').text(this.name);
-      $('#indoor-escape button').attr('title', translations['Close']);
+      $('#indoor-escape button').attr('title', translate('Close'));
 
       var txt = '<div class="btn-group" data-toggle="buttons">';
       for (var i in levels) {
@@ -195,9 +195,9 @@
 			
       if (txt == '') {
         if (api.building.currentType == 'All')
-          txt += '<em>' + translations['Empty floor'] + '</em>';
+          txt += '<em>' + translate('Empty floor') + '</em>';
         else
-          txt += '<em>' + translations['None on this floor'] + '</em>';
+          txt += '<em>' + translate('None on this floor') + '</em>';
       }
 
       return txt;
