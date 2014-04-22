@@ -253,6 +253,16 @@
         this.polygon.bringToBack();
 
       for (var i in this.coords) {
+        if (this.coords[i].entrance != null) {
+          new L.circleMarker(this.coords[i], {
+            radius: (this.coords[i].entrance == 'main') ? 4 : 2,
+            weight: 2,
+            clickable: false,
+            color: 'green',
+            fillOpacity: 1
+          })
+                  .addTo(api.layer.building);
+        }
         if (this.coords[i].door != null) {
           new L.circleMarker(this.coords[i], {
             radius: 2,

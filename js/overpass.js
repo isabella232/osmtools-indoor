@@ -211,6 +211,8 @@ api.parseBuilding = function(data) {
       var value = $(this).attr("v");
       if (key == "door")
         nodes[i].door = value;
+      if (key == "entrance")
+        nodes[i].entrance = value;
       if (key == "name")
         nodes[i].name = value;
       if (key == "amenity" || key == "information")
