@@ -280,9 +280,9 @@ L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', 
     }
 
     //formatted label
-    this.label = function(color = true) {
+    this.label = function(color) {
       var txt = "";
-      if (color) { txt = '<span style="color:' + this.color() + '">■</span> ' } ;
+      if ( typeof color === 'undefined') { txt = '<span style="color:' + this.color() + '">■</span> ' } ;
       if (this.name != undefined && this.ref != undefined)
         return txt + this.name + ' (' + this.ref + ')';
       if (this.name == undefined && this.ref != undefined)
