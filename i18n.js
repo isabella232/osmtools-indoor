@@ -43,7 +43,7 @@
         'pl' : 'Mapa'
     },
     'Click to load buildings' :{
-		'fr' : 'Cliquer pour charger le batiment',
+		'fr' : 'Cliquer pour charger les batiments',
         'pl' : 'Kliknij aby załadować budynki'
     },
     '<strong>Zoom in</strong> to load buildings' :{
