@@ -62,7 +62,7 @@
 
   /** Return level n **/
   this.getLevel = function(n) {
-    return this.levels.filter(function(l) l.level == n).pop();
+    return this.levels.filter(function(l){ return (l.level == n) ; }).pop();
   }
 
   /** Draw level n and write list of rooms **/
