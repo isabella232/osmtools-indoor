@@ -250,7 +250,7 @@
                 helper.modal();
               });
 if (this.label() != null) {
-L.marker(this.polygon.getCenter(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
+L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
 } ;
       if (this.type == "corridor")
         this.polygon.bringToBack();
