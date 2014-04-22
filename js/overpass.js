@@ -40,7 +40,7 @@ api.query = function() {
   if (map.layer === 1) {
     //download elements for zoom 10+
     if (map.getZoom() > 1) {
-      $('.leaflet-control-requery-info').html(translations['Click to load buildings']);
+      $('.leaflet-control-requery-info').html(translate('Click to load buildings'));
       //api.loadShell();
       if (map.getZoom() < 16) {
         //full outline
@@ -52,7 +52,7 @@ api.query = function() {
         map.addLayer(api.layer.outlines);
       }
     } else
-      $('.leaflet-control-requery-info').html(translations['<strong>Zoom in</strong> to load buildings']);
+      $('.leaflet-control-requery-info').html(translate('<strong>Zoom in</strong> to load buildings'));
   } else if (map.layer === 2) {
     if (map.getZoom() < 16) {
       //pin only
