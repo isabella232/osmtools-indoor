@@ -263,10 +263,13 @@ api.parseBuilding = function(data, outline) {
       if ((key == "amenity" && value.match(/(arts_centre|cinema|theatre)/)) || (key == "leisure" && value.match(/(sports_centre)/)))
         way.category = "Entertainment";
 		
-	  if(key =="amenity" && value.match(/(toilets)/))
-		way.category = "WC" ;
-	  if(key =="buildingpart" && value.match(/(verticalpassage)/))
-		way.category = "Stairs" ;
+	  // if(key =="amenity" && value.match(/(toilets)/))
+		// way.category = "WC" ;
+	  // if(key =="buildingpart" && value.match(/(verticalpassage)/))
+		// way.category = "Stairs" ;
+		
+	  if(key =="buildingpart:verticalpassage" && value.match(/(elevator)/))
+		way.type = value;
 		
       if (key == "shop" && way.shop == null)
         way.shop = value;

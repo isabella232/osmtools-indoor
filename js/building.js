@@ -234,7 +234,6 @@
     this.access;
     this.contact = {};
     this.opening_hours;
-
     this.polygon;
 
     /** Draw room **/
@@ -263,7 +262,22 @@
 		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
 	};
 	if(this.type == "verticalpassage"){
-		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building);//.on('click', function() {
+			// if(building.level == 0){
+				// L.popup(this.coords,{closeButton:true}).setContent('monter');
+			// }else{
+				// L.popup(this.coords,{closeButton:true}).setContent('monter / descendre');
+			// }
+		// }
+	};
+	if(this.access == "emergency" && this.type == "verticalpassage"){
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.building);
+	};
+	if(this.type == "elevator"){
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/elevator.png', iconSize:[30,30]})}).addTo(api.layer.building);
+	} ;
+	if(this.shop == "bicycle_parking"){
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/parking_velos.png', iconSize:[30,30]})}).addTo(api.layer.building);
 	};
      // if (this.type == "corridor")
      //   this.polygon;//.bringToBack();
