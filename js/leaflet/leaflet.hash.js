@@ -22,11 +22,11 @@
                 hash = hash.substr(1);
             }
             var args = hash.split("&");
-            if (args.length == 3) {
-                for(var i in args) {
+            for(var i in args) {
                     if(args[i].search("lat=") != -1) var lat = parseFloat(args[i].substring(4,args[i].length));
                     if(args[i].search("lon=") != -1) var lon = parseFloat(args[i].substring(4,args[i].length));
                     if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
+                    if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
                 }
                 
                 /*
@@ -34,17 +34,18 @@
                     lat = parseFloat(args[1].substring(4,args[1].length)),
                     lon = parseFloat(args[2]);
                 */
-                if (isNaN(zoom) || isNaN(lat) || isNaN(lon)) {
+                if (isNaN(zoom) ){     	
+                        zoom = 18;
+                 }	
+                else if ( isNaN(lat) || isNaN(lon) ) {
                     return false;
-                } else {
+                } 
+                else {
                     return {
                         center: new L.LatLng(lat, lon),
-                        zoom: zoom
+                        zoom: zoom 
                     };
                 }
-            } else {
-                return false;
-            }
         },
     
         formatHash: function(map) {
@@ -112,6 +113,7 @@
                 this.map.setView(parsed.center, parsed.zoom);
                 
                 this.movingMap = false;
+                alert(parsed.room);
             } else {
                 // console.warn("parse error; resetting:", this.map.getCenter(), this.map.getZoom());
                 this.onMapMove(this.map);
