@@ -260,10 +260,10 @@
 		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
 	} ;
 	if(this.shop == "toilets"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
 	};
 	if(this.type == "verticalpassage"){
-		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'stairs.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building);
 	};
      // if (this.type == "corridor")
      //   this.polygon;//.bringToBack();
