@@ -76,7 +76,9 @@
     var level = this.getLevel(n);
     if (level != undefined) {
 	      api.layer.building.clearLayers();
-		  this.outline.drawInside() ;
+		  if(typeof this.outline !== "undefined" ){
+		  	this.outline.drawInside() ;
+		  }
       level.draw();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;

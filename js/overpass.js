@@ -96,7 +96,7 @@ api.loadShell = function() {
   });
 };
 
-api.loadBuilding = function(id, outline) {
+api.loadBuilding = function(id, outline , idLevel, idRoom) {
   map.query.startAnimation();
   
   $('.leaflet-control-requery-info').fadeOut('fast');
@@ -115,12 +115,26 @@ api.loadBuilding = function(id, outline) {
       if (map.hasLayer(api.layer.outlines))
         map.removeLayer(api.layer.outlines);
       api.parseBuilding(data, outline);
+      if(idLevel != null && idRoom != null){
+      	api.building.drawLevel(api.idToNumLevel(idLevel));
+	  	api.building.popup(idLevel,idRoom);
+      } 
       map.query.stopAnimation();
       $('.leaflet-control-requery').fadeOut('fast');
       $('.leaflet-control-requery-info').fadeOut('fast');
     }
   });
 }
+
+//fonction de conversion de l'id du level en num (0,1 ...)
+api.idToNumLevel = function(idLevel){
+	return api.building.levels[idLevel].level ;
+}
+
+api.popupRoom = function (idBuild, idLevel, idRoom){
+ }
+
+
 
 /**
  * CONTAINS
