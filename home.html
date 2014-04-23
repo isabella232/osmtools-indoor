@@ -142,16 +142,20 @@ function validate_and_submit ()
 function getSelectValue(selectId)
 {
 	var selectElmt = document.getElementById(selectId);
-	var val = selectElmt.options[selectElmt.selectedIndex].value;
-	alert(val);
-	return val;
-	
+	var textselectionne = selectElmt.options[selectElmt.selectedIndex].text;
+	if(textselectionne.match(/[0-9]+/) != null ){
+		return textselectionne.match(/[0-9]+/)[0];
+	}
+}
+
+function changeUri(){
+    document.getElementById('IndorOsm').src ="index.html#lat=50.60947&lon=3.13807&z=20&room="+getSelectValue("Selectsalle")+"";
 }
 </script>
 
 
 
-<iframe src="index.html" width="500" height="555" align="right""></iframe>
+<iframe id="IndorOsm" src="index.html#lat=50.60947&lon=3.13807&z=20" width="500" height="555" align="right""></iframe>
 
 
 
@@ -241,8 +245,8 @@ function getSelectValue(selectId)
 
 
 <tr><td class="CR"><b>Salles</b></td>
-  <td class="CL" valign="top"><table><tbody><tr><td><select name="rooms[]" multiple="multiple" onchange="getSelectValue(this.value)">
-  <option selected="selected" value="1">Amphi Turing</option><option value="3">DELATTRE</option><option value="2">Salle 101</option><option value="11">Salle 211</option><option value="7">Salle 226</option><option value="15">Salle 326</option><option value="12">Salle du conseil + visio  </option></select></td><td>CTRL + clic souris pour sélectionner plus d'une salle</td></tr></tbody></table>
+  <td class="CL" valign="top"><table><tbody><tr><td><select id="Selectsalle" name="rooms[]" multiple="multiple" onchange="changeUri()">
+  <option selected="selected" value="1" >Amphi Turing</option><option value="3" >DELATTRE</option><option value="2" >Salle 101</option><option value="11" >Salle 211</option><option value="7" >Salle 226</option><option value="15" >Salle 326</option><option value="12" >Salle du conseil + visio  </option></select></td><td>CTRL + clic souris pour sélectionner plus d'une salle</td></tr></tbody></table>
     </td></tr>
 
 <tr><td class="CR"><b>Type :</b></td>
