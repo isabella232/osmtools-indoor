@@ -96,7 +96,7 @@ api.loadShell = function() {
   });
 };
 
-api.loadBuilding = function(id) {
+api.loadBuilding = function(id, outline) {
   map.query.startAnimation();
   
   $('.leaflet-control-requery-info').fadeOut('fast');
@@ -114,7 +114,7 @@ api.loadBuilding = function(id) {
     success: function(data) {
       if (map.hasLayer(api.layer.outlines))
         map.removeLayer(api.layer.outlines);
-      api.parseBuilding(data);
+      api.parseBuilding(data, outline);
       map.query.stopAnimation();
       $('.leaflet-control-requery').fadeOut('fast');
       $('.leaflet-control-requery-info').fadeOut('fast');
@@ -194,7 +194,7 @@ api.parseShell = function(data) {
  * PARSING BUILDING
  * -----------------------------------------------------------------------------
  */
-api.parseBuilding = function(data) {
+api.parseBuilding = function(data, outline) {
   var nodes = new Array();
   var ways = new Array();
   var ways_rel = new Array();
@@ -228,7 +228,7 @@ api.parseBuilding = function(data) {
     });
 
     var way = new building.room($(this).attr("id"), coords);
-    way.category = "Other";
+    way.category = "All";
 
     $(this).find('tag').each(function() {
       var key = $(this).attr("k").toLowerCase();
@@ -262,7 +262,12 @@ api.parseBuilding = function(data) {
         way.category = "Sport";
       if ((key == "amenity" && value.match(/(arts_centre|cinema|theatre)/)) || (key == "leisure" && value.match(/(sports_centre)/)))
         way.category = "Entertainment";
-
+		
+	  if(key =="amenity" && value.match(/(toilets)/))
+		way.category = "WC" ;
+	  if(key =="buildingpart" && value.match(/(verticalpassage)/))
+		way.category = "Stairs" ;
+		
       if (key == "shop" && way.shop == null)
         way.shop = value;
       if (key == "amenity" && way.shop == null)
@@ -393,7 +398,7 @@ api.parseBuilding = function(data) {
           shell = $(this).attr("ref");
       });
 
-      api.building = new building.building($(this).attr("id"), name, relations);
+      api.building = new building.building($(this).attr("id"), name, relations, outline);
       api.building.shell = shell;
     }
   });

@@ -18,7 +18,7 @@
      new L.Polygon(this.coords)
           .addTo(api.layer.outlines)
           .on('click', function() {
-                api.loadBuilding(this.relationId);
+                api.loadBuilding(this.relationId, this);
           }, this);
 
       new L.marker(this.center())
@@ -27,6 +27,10 @@
                 map.setView(this.getLatLng(), 17);
               });
     }
+	
+	this.drawInside = function(){
+		new L.Polygon(this.coords,{stroke:false,fillColor:'#B7C0BF',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
+	}
 	  
 
     /** Center of outline **/
@@ -43,9 +47,10 @@
   
  
 
-  building.building = function(id, name, levels) {
+  building.building = function(id, name, levels, outline) {
     this.id = id;
     this.name = name;
+    this.outline = outline;
     this.levels = levels;
     this.shell;
 
@@ -70,6 +75,8 @@
     if (typeof n === 'undefined') { n = this.currentLevel; }
     var level = this.getLevel(n);
     if (level != undefined) {
+	      api.layer.building.clearLayers();
+		  this.outline.drawInside() ;
       level.draw();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
@@ -205,7 +212,7 @@
 
     /** Draw level **/
     this.draw = function() {
-      api.layer.building.clearLayers();
+//      api.layer.building.clearLayers();
       for (var i in this.rooms)
         if (this.rooms[i] !== null)
           this.rooms[i].draw();
@@ -249,11 +256,17 @@
               .on('click', function() {
                 helper.modal();
               });
-if (this.label() != null) {
-L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
-} ;
-      if (this.type == "corridor")
-        this.polygon.bringToBack();
+	if (this.label() != null) {
+		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
+	} ;
+	if(this.shop == "toilets"){
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
+	};
+	if(this.type == "verticalpassage"){
+		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'stairs.png', iconSize:[30,30]})}).addTo(api.layer.building);
+	};
+     // if (this.type == "corridor")
+     //   this.polygon;//.bringToBack();
 
       for (var i in this.coords) {
         if (this.coords[i].entrance != null) {
