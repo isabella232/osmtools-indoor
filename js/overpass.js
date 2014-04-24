@@ -37,27 +37,28 @@ api.tagBuilding = function(id) {
  * -----------------------------------------------------------------------------
  */
  
-api.geosearch = function(latitude, longitude, salle, data) {
-  var idbuilding;
-  var idlevel;
-  var idway;
+api.tagRoom(latitude, longitude, salle){
+ return "[out:json][timeout:25];"+
+"(way(around:100,50.6097504,3.1373735)['buildingpart'='room']['ref'='105']->.a;.a >;.a <<;);"+
+"out skel qt;" ; }
+
+api.geosearch = function(latitude, longitude, salle) {
   
-  var nodes = new Array();
-  var outlines = new Array();
-  var buildingId = new Array();
-  var names = new Array();
   //Exec Request
   $.ajax({
-    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()), //.......
+    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagRoom(latitude, longitude, salle));
     type: 'GET',
     crossDomain: true,
     success: function(data) {
-      api.parseShell(data);
-      map.query.stopAnimation();
-      //$('#map-loading')[0].style.display = 'none';
+      api.parseRoom(latitude, longitude, salle, data);
     }
   });
   
+};
+api.parseRoom(latitude, longitude, salle, data) {
+  var idbuilding;
+  var idlevel;
+  var idway;
   var nbway = 0;
   //Compter le nombre de chemin
   $(data).find('way').each(function() {
