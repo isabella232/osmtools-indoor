@@ -157,6 +157,8 @@ api.loadBuilding = function(id, idLevel, idRoom) {
         api.parseShell(data);
       api.parseBuilding(data);
       if(idLevel != null && idRoom != null){
+      	if (map.getZoom() < 20 )
+      		map.setZoom(20); 
       	api.building.drawLevel(api.idToNumLevel(idLevel));
 	  	api.building.popup(idLevel,idRoom);
       } 
