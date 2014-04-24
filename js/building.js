@@ -29,7 +29,7 @@
     }
 	
 	this.drawInside = function(){
-		new L.Polygon(this.coords,{stroke:false,fillColor:'#B7C0BF',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
+		new L.Polygon(this.coords,{color:'#B7C0BF',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
 	}
 	  
 
