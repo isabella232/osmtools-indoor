@@ -76,8 +76,8 @@
     var level = this.getLevel(n);
     if (level != undefined) {
 	      api.layer.building.clearLayers();
-		  if(typeof api.outlines[this.id] !== "undefined" && api.outlines[this.id] != null ){
-		  	api.outlines[this.id].forEach(function(o){o.drawInside() ;});
+		  if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
+		  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
 		  }
       level.draw();
       $('#indoor-rooms').html(level.list());

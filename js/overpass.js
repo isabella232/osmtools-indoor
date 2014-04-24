@@ -197,19 +197,18 @@ api.parseShell = function(data) {
       }
     }
   });
-  outlines.forEach(function(outline){
-    if (typeof outline.relationId !== 'undefined'){
-    if (typeof api.all_outlines[outline.relationId] === 'undefined')
-       api.all_outlines[outline.relationId] = new Array() ;
-   //v api.all_outlines[outline.relationId].push(outline);
-}
-  });
   api.shells.forEach(function(sid){
     var o = outlines[sid];
     if (typeof buildingId[o.relationId] != 'undefined') {
       o.relationId = buildingId[o.relationId];
       o.name = names[o.relationId];
     } ;
+
+    if (typeof o.relationId !== 'undefined'){
+    if (typeof api.all_outlines[o.relationId] === 'undefined')
+       api.all_outlines[o.relationId] = new Array() ;
+    api.all_outlines[o.relationId].push(o);
+}
     o.draw();
   });
 }
