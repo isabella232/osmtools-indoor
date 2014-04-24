@@ -82,6 +82,8 @@
       level.draw();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
+      api.building.updateLevelSwitcher();
+
       return true;
     }
     alert("Something went wrong (no level " + n + ")!");
@@ -110,6 +112,16 @@
       txt += '</div>';
       $("#indoor-levels").html(txt);
     };
+    
+    
+    this.updateLevelSwitcher = function(){
+    	var levels = api.building.levels.slice();
+		for (var i in levels) {
+        	var l = levels[i].level;
+    		$('#indoor-levels-'+l).removeClass('active');  
+		}	
+    	$('#indoor-levels-'+api.building.currentLevel).addClass('active');  	
+    }
 
     /** Show popup for selected room in the list. Here because of shorter addr. **/
     this.popup = function(level_, room_) {
