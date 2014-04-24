@@ -113,7 +113,7 @@
                 this.map.setView(parsed.center, parsed.zoom);
                 
                 this.movingMap = false;
-                alert(parsed.room);
+                //alert(parsed.room);
             } else {
                 // console.warn("parse error; resetting:", this.map.getCenter(), this.map.getZoom());
                 this.onMapMove(this.map);

@@ -6,6 +6,7 @@ api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
 
 api.shells = new Array();       //list of outlines
+api.all_outlines = new Array();       //list of outlines
 api.building;                   //building
 
 /**
@@ -62,7 +63,7 @@ api.query = function() {
       //outline
       map.removeLayer(api.layer.pins);
       map.addLayer(api.layer.building);
-      for (var i in api.building.getLevel(0).pois)
+      for (var i in api.building.getLevel(api.building.currentLevel).pois)
         api.building.getLevel(api.building.currentLevel).pois[i].draw();
     }
   }
@@ -114,7 +115,9 @@ api.loadBuilding = function(id, outline , idLevel, idRoom) {
     success: function(data) {
       if (map.hasLayer(api.layer.outlines))
         map.removeLayer(api.layer.outlines);
-      api.parseBuilding(data, outline);
+//      if (api.all_outlines.length == 0)
+//        api.parseShell(data);
+      api.parseBuilding(data);
       if(idLevel != null && idRoom != null){
       	api.building.drawLevel(api.idToNumLevel(idLevel));
 	  	api.building.popup(idLevel,idRoom);
@@ -194,6 +197,13 @@ api.parseShell = function(data) {
       }
     }
   });
+  outlines.forEach(function(outline){
+    if (typeof outline.relationId !== 'undefined'){
+    if (typeof api.all_outlines[outline.relationId] === 'undefined')
+       api.all_outlines[outline.relationId] = new Array() ;
+   //v api.all_outlines[outline.relationId].push(outline);
+}
+  });
   api.shells.forEach(function(sid){
     var o = outlines[sid];
     if (typeof buildingId[o.relationId] != 'undefined') {
@@ -208,7 +218,7 @@ api.parseShell = function(data) {
  * PARSING BUILDING
  * -----------------------------------------------------------------------------
  */
-api.parseBuilding = function(data, outline) {
+api.parseBuilding = function(data) {
   var nodes = new Array();
   var ways = new Array();
   var ways_rel = new Array();
@@ -415,7 +425,7 @@ api.parseBuilding = function(data, outline) {
           shell = $(this).attr("ref");
       });
 
-      api.building = new building.building($(this).attr("id"), name, relations, outline);
+      api.building = new building.building($(this).attr("id"), name, relations);
       api.building.shell = shell;
     }
   });
@@ -435,6 +445,6 @@ api.parseBuilding = function(data, outline) {
     }
   } else {
     alert("Something went wrong (no building found)!");
-    api.loadShell();
+    //api.loadShell();
   }
 }

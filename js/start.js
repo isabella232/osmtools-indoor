@@ -58,11 +58,11 @@ $(document).ready(function() {
     map.layer = 1; //1=outdoor, 2=indoor
     api.query();
     
-    $('#indoor-escape').click(function() {
-      api.loadShell();
-      $('#indoor-navigation').hide();
-    });
-    
+//    $('#indoor-escape').click(function() {
+//      api.loadShell();
+//      $('#indoor-navigation').hide();
+//    });
+//    
 /**
  * ONCLICK
  * -----------------------------------------------------------------------------
