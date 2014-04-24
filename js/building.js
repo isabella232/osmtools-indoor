@@ -63,8 +63,20 @@
     });
     return arr.sort();
   }
+  this.addNumToString = function(n){
+	return (parseInt(api.building.currentLevel)+n).toString()
+  }
   this.currentLevel = this.getLevelIds()[0];
-
+  this.getLevelPerId = function(idRoom){
+	var arr = [] ;
+	api.building.levels.forEach(function(l){
+		l.rooms.forEach(function(r){
+			if(idRoom == r.id)
+				arr.push(l.level);
+		})
+	})
+	return arr.sort();
+  }
   /** Return level n **/
   this.getLevel = function(n) {
     return this.levels.filter(function(l){ return (l.level == n) ; }).pop();
@@ -162,7 +174,7 @@
     this.shell; //@TODO
     this.coords;
     this.name = "?";
-
+	
     /** Write list of all room on level **/
     this.list = function() {
 	var tmp = new Array();
@@ -250,6 +262,7 @@
     this.contact = {};
     this.opening_hours;
     this.polygon;
+	
 
     /** Draw room **/
     this.draw = function() {
@@ -277,17 +290,17 @@
 		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
 	};
 	if(this.type == "verticalpassage"){
-		room = this ;
+		var room = this ;
 		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building).on('click', function() {
 		var content = "";	
-			if(api.building.currentLevel ==  0){
-				content = '<button>'+translate('Go Up')+'</button>';
-			}else{
-				content = '<button>'+translate('Go Up')+'</button><button>'+translate('Go Down')+'</button>';
-			}
-			L.popup().setLatLng(room.center()).setContent(content).openOn(map);
-
-			 //alert('Clicked on a group!');
+			
+			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(1)) != -1)
+				content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
+			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(-1)) != -1)
+				content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
+			if(content =="")
+				content= translate('This stairway goes nowhere') ;
+			L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
 		})
 	};
 	if(this.access == "emergency" && this.type == "verticalpassage"){

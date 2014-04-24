@@ -24,6 +24,11 @@
      * Website 
      * -------------------------------------------------------------------------
      */
+	'This stairway goes nowhere':{
+		'fr': 'Cet escalier ne va nulle part',
+		'it': 'Questa scala va da nessuna parte',
+		'pl': 'To idzie donikąd schody'
+	},
 	'Go Up' :{
 		'fr': 'Monter',
 		'it': 'Salire',
