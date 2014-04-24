@@ -80,6 +80,7 @@
 		  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
 		  }
       level.draw();
+      map.closePopup();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
       api.building.updateLevelSwitcher();
@@ -139,7 +140,7 @@
 	  
 	  }
       
-      map.setView(room.center(room), map.getZoom());
+      map.setView(room.center());
 	  L.popup()
               .setLatLng(room.center(room))
               .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.levels[\''+level_+'\'].rooms['+room_+'].modal();">details</button></div>')

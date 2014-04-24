@@ -122,6 +122,7 @@ api.loadShell = function() {
   }
   if (!map.hasLayer(api.layer.outlines))
     map.addLayer(api.layer.outlines);
+  map.closePopup();
 
   $.ajax({
     url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()),
@@ -158,7 +159,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
       api.parseBuilding(data);
       if(idLevel != null && idRoom != null){
       	if (map.getZoom() < 20 )
-      		map.setZoom(20); 
+      		map.setZoom(20);
       	api.building.drawLevel(api.idToNumLevel(idLevel));
 	  	api.building.popup(idLevel,idRoom);
       } 
@@ -173,9 +174,6 @@ api.loadBuilding = function(id, idLevel, idRoom) {
 api.idToNumLevel = function(idLevel){
 	return api.building.levels[idLevel].level ;
 }
-
-api.popupRoom = function (idBuild, idLevel, idRoom){
- }
 
 
 
