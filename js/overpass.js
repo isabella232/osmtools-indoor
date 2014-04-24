@@ -37,37 +37,63 @@ api.tagBuilding = function(id) {
  * -----------------------------------------------------------------------------
  */
  
-api.geosearch = function(latitude, longitude, salle) {
+api.geosearch = function(latitude, longitude, salle, data) {
   var idbuilding;
   var idlevel;
   var idway;
+  
+  var nodes = new Array();
+  var outlines = new Array();
+  var buildingId = new Array();
+  var names = new Array();
   //Exec Request
-  $();
+  $.ajax({
+    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()), //.......
+    type: 'GET',
+    crossDomain: true,
+    success: function(data) {
+      api.parseShell(data);
+      map.query.stopAnimation();
+      //$('#map-loading')[0].style.display = 'none';
+    }
+  });
+  
+  var nbway = 0;
   //Compter le nombre de chemin
+  $(data).find('way').each(function() {
+  	nbway = nbway+1;
+  });
   
   //S'il existe plusieurs chemins, sélectionner le plus proche
-  //...
-  var type = $(this).attr("type");
-  var type = $(this).attr("role");
-  //Trouver le idway
-  $(this).find('member').each(function() {
-    if (type == "way")
-      idway = $(this).attr("ref");
-  });
+  //...sinon :
+  if(nbway > 1){
   
-  //Exec requête qui retourne le level contenant cet idway
-  //...
-  $(this).find('member').each(function() {
-    if (type == "relation")
-      idway = $(this).attr("ref");
-  });
+  }else{
+ 	 //Trouver le idway  
+ 	 //FIND WAY
+ 	 $(data).find('way').each(function() {
+ 	   idway = $(this).attr("ref");
+ 	 });
   
-  //Exec requête qui retourne le building contenant cet idlevel
-  //...
-  $(this).find('member').each(function() {
-    if (role == "buildingpart")
-      idbuilding = $(this).attr("ref");
-  });
+ 	//Trouver le level contenant cet idway
+  	//FIND LEVEL
+  	$(data).find('relation').each(function() {
+    	$(this).find('member').each(function() {
+          if ($(this).attr("ref") == idway && $(this).attr("role") == "shell")
+          idlevel = $(this).attr("ref");
+        });
+    });
+ 	
+  	//Trouver le building qui contient ce level
+ 	//FIND BUILDING
+ 	$(data).find('relation').each(function() {
+ 	   $(this).find('member').each(function() {
+  	    if ($(this).attr("type") == "relation" && /^level/.test($(this).attr("role"))) 
+  	      idbuiliding = buildingId[$(this).attr("ref")];
+ 	   });
+ 	});
+ 	
+  }
 }
 
 
@@ -235,6 +261,7 @@ api.parseShell = function(data) {
       }
     }
   });
+  
   api.shells.forEach(function(sid){
     var o = outlines[sid];
     if (typeof buildingId[o.relationId] != 'undefined') {
