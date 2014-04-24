@@ -37,16 +37,17 @@ api.tagBuilding = function(id) {
  * -----------------------------------------------------------------------------
  */
  
-api.tagRoom(latitude, longitude, salle){
+api.tagRoom = function(latitude, longitude, salle){
  return "[out:json][timeout:25];"+
 "(way(around:100,50.6097504,3.1373735)['buildingpart'='room']['ref'='105']->.a;.a >;.a <<;);"+
-"out skel qt;" ; }
+"out skel qt;" ;
+};
 
 api.geosearch = function(latitude, longitude, salle) {
   
   //Exec Request
   $.ajax({
-    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagRoom(latitude, longitude, salle));
+    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagRoom(latitude, longitude, salle)),
     type: 'GET',
     crossDomain: true,
     success: function(data) {
@@ -55,7 +56,7 @@ api.geosearch = function(latitude, longitude, salle) {
   });
   
 };
-api.parseRoom(latitude, longitude, salle, data) {
+api.parseRoom = function(latitude, longitude, salle, data){
   var idbuilding;
   var idlevel;
   var idway;
