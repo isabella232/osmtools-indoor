@@ -97,6 +97,8 @@
       api.building.currentLevel = n;
       api.building.updateLevelSwitcher();
 
+map.removeLayer(api.layer.building);
+map.addLayer(api.layer.building);
       return true;
     }
     alert("Something went wrong (no level " + n + ")!");
