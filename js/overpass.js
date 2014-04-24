@@ -2,6 +2,7 @@ var api = {};
 api.layer = {};
 
 api.layer.building = new L.LayerGroup();
+api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
 
@@ -98,7 +99,29 @@ api.parseRoom = function(latitude, longitude, salle, data){
   }
 }
 
+api.layer.reloadBuilding =function(clear) {
+  api.layer.removeBuilding(clear);
 
+  map.addLayer(api.layer.building);
+  if (map.getZoom() > 19) {
+  map.addLayer(api.layer.decoration);
+  } else {
+    if (map.hasLayer(api.layer.decoration))
+      map.removeLayer(api.layer.decoration);
+  }
+}
+api.layer.removeBuilding = function(clear) {
+  if (clear == true) {
+      api.layer.building.clearLayers();
+      api.layer.decoration.clearLayers();
+  }
+  if (map.hasLayer(api.layer.building)) {
+    map.removeLayer(api.layer.building);
+  }
+  if (map.hasLayer(api.layer.decoration)) {
+    map.removeLayer(api.layer.decoration);
+  }
+}
 /**
  * QUERY
  * -----------------------------------------------------------------------------
@@ -123,12 +146,12 @@ api.query = function() {
   } else if (map.layer === 2) {
     if (map.getZoom() < 16) {
       //pin only
-      map.removeLayer(api.layer.building);
+      api.layer.removeBuilding();
       map.addLayer(api.layer.pins);
     } else {
       //outline
       map.removeLayer(api.layer.pins);
-      map.addLayer(api.layer.building);
+      api.layer.reloadBuilding();
       for (var i in api.building.getLevel(api.building.currentLevel).pois)
         api.building.getLevel(api.building.currentLevel).pois[i].draw();
     }
@@ -143,11 +166,7 @@ api.loadShell = function() {
   //$('#map-zoominfo').css('display', 'none');
 
   map.layer = 1;
-  if (map.hasLayer(api.layer.building)) {
-    api.layer.building.clearLayers();
-    map.removeLayer(api.layer.building);
-
-  }
+  api.layer.removeBuilding(true);
   if (!map.hasLayer(api.layer.outlines))
     map.addLayer(api.layer.outlines);
   map.closePopup();
@@ -170,10 +189,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
   $('.leaflet-control-requery-info').fadeOut('fast');
   map.layer = 2;
 
-  if (!map.hasLayer(api.layer.building)) {
-    api.layer.building.clearLayers();
-    map.addLayer(api.layer.building);
-  }
+api.layer.reloadBuilding(true);
 
   $.ajax({
     url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
@@ -193,8 +209,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
       	api.building.drawLevel(api.idToNumLevel(idLevel));
 	  	api.building.popup(idLevel,idRoom);
       } 
-	  map.removeLayer(api.layer.building);
-	  map.addLayer(api.layer.building);
+      api.layer.reloadBuilding();
       map.query.stopAnimation();
       $('.leaflet-control-requery').fadeOut('fast');
       $('.leaflet-control-requery-info').fadeOut('fast');

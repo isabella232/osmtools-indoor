@@ -87,18 +87,18 @@
     if (typeof n === 'undefined') { n = this.currentLevel; }
     var level = this.getLevel(n);
     if (level != undefined) {
-	      api.layer.building.clearLayers();
-		  if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
-		  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
-		  }
+      api.layer.building.clearLayers();
+      api.layer.decoration.clearLayers();
+      if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
+  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
+      }
       level.draw();
       map.closePopup();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
       api.building.updateLevelSwitcher();
 
-map.removeLayer(api.layer.building);
-map.addLayer(api.layer.building);
+      api.layer.reloadBuilding();
       return true;
     }
     alert("Something went wrong (no level " + n + ")!");
@@ -286,14 +286,14 @@ map.addLayer(api.layer.building);
                 helper.modal();
               });
 	if (this.label() != null) {
-		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
+		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.decoration);
 	} ;
 	if(this.shop == "toilets"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.decoration);
 	};
 	if(this.type == "verticalpassage"){
 		var room = this ;
-		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building).on('click', function() {
+		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.decoration).on('click', function() {
 		var content = "";	
 			
 			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(1)) != -1)
@@ -306,13 +306,13 @@ map.addLayer(api.layer.building);
 		})
 	};
 	if(this.access == "emergency" && this.type == "verticalpassage"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
 	};
 	if(this.type == "elevator"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/elevator.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/elevator.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
 	} ;
 	if(this.shop == "bicycle_parking"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/parking_velos.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/parking_velos.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
 	};
      // if (this.type == "corridor")
      //   this.polygon;//.bringToBack();
