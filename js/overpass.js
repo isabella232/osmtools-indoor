@@ -128,29 +128,26 @@ api.layer.removeBuilding = function(clear) {
  */
 api.query = function() {
   if (map.layer === 1) {
-    //download elements for zoom 10+
-    if (map.getZoom() > 1) {
-      $('.leaflet-control-requery-info').html(translate('Click to load buildings'));
-      //api.loadShell();
-      if (map.getZoom() < 16) {
-        //full outline
-        map.removeLayer(api.layer.outlines);
-        map.addLayer(api.layer.pins);
-      } else {
-        //pin only
-        map.removeLayer(api.layer.pins);
-        map.addLayer(api.layer.outlines);
-      }
-    } else
-      $('.leaflet-control-requery-info').html(translate('<strong>Zoom in</strong> to load buildings'));
+    $('.leaflet-control-requery-info').html(translate('Click to load buildings'));
+    if (map.getZoom() < 16) {
+      //full outline
+      map.removeLayer(api.layer.outlines);
+      map.addLayer(api.layer.pins);
+    } else {
+      //pin only
+      map.removeLayer(api.layer.pins);
+      map.addLayer(api.layer.outlines);
+    }
   } else if (map.layer === 2) {
     if (map.getZoom() < 16) {
       //pin only
       api.layer.removeBuilding();
+      map.removeLayer(api.layer.outlines);
       map.addLayer(api.layer.pins);
     } else {
       //outline
       map.removeLayer(api.layer.pins);
+      map.addLayer(api.layer.outlines);
       api.layer.reloadBuilding();
       for (var i in api.building.getLevel(api.building.currentLevel).pois)
         api.building.getLevel(api.building.currentLevel).pois[i].draw();
@@ -167,8 +164,6 @@ api.loadShell = function() {
 
   map.layer = 1;
   api.layer.removeBuilding(true);
-  if (!map.hasLayer(api.layer.outlines))
-    map.addLayer(api.layer.outlines);
   map.closePopup();
 
   $.ajax({

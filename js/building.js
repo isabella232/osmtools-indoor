@@ -29,7 +29,7 @@
     }
 	
 	this.drawInside = function(){
-		new L.Polygon(this.coords,{color:'#B7C0BF',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
+		new L.Polygon(this.coords,{color:'#B7C0BF',opacity:'1',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
 	}
 	  
 
@@ -54,14 +54,16 @@
     this.levels = levels;
     this.shell;
 
+    this.levelIds = new Array();
+    this.levels.forEach(function(l){
+        this.levelIds.push(l.level);
+    }, this );
+    this.levelIds.sort();
+
   this.currentType = 'All';
 
   this.getLevelIds = function() {
-    var arr = [];
-    this.levels.forEach(function(l){
-        arr.push(l.level);
-    });
-    return arr.sort();
+     return this.levelIds;
   }
   this.addNumToString = function(n){
 	return (parseInt(api.building.currentLevel)+n).toString()
@@ -110,31 +112,25 @@
      * Draw level switcher
      */
     this.drawLevelSwitcher = function() {
-      var levels = api.building.levels.slice();
-      levels.sort(function(a, b) {
-        return a.level - b.level;
-      });
+      var levels = api.building.getLevelIds();
 
       //add text
       $('#indoor-navigation h3').text(this.name);
       $('#indoor-escape button').attr('title', translate('Close'));
 
       var txt = '<div class="btn-group" data-toggle="buttons">';
-      for (var i in levels) {
-        var l = levels[i].level;
+      levels.forEach(function(l) {
         txt += '<label class="btn" id="indoor-levels-' + l + '" onclick="api.building.drawLevel(' + l + ');"><input type="radio">' + l + '</label>';
-      }
+      });
       txt += '</div>';
       $("#indoor-levels").html(txt);
     };
     
     
     this.updateLevelSwitcher = function(){
-    	var levels = api.building.levels.slice();
-		for (var i in levels) {
-        	var l = levels[i].level;
-    		$('#indoor-levels-'+l).removeClass('active');  
-		}	
+    	api.building.getLevelIds().forEach(function(l) {
+          $('#indoor-levels-'+l).removeClass('active');  
+	});	
     	$('#indoor-levels-'+api.building.currentLevel).addClass('active');  	
     }
 
@@ -318,6 +314,16 @@
      //   this.polygon;//.bringToBack();
 
       for (var i in this.coords) {
+        if (this.coords[i].entrance == 'main') {
+          new L.circleMarker(this.coords[i], {
+            radius: 3,
+            weight: 2,
+            clickable: false,
+            color: 'blue',
+            fillOpacity: 1
+          })
+                  .addTo(api.layer.building);
+        }
         if (this.coords[i].entrance != null) {
           new L.circleMarker(this.coords[i], {
             radius: (this.coords[i].entrance == 'main') ? 4 : 2,
@@ -326,7 +332,7 @@
             color: 'green',
             fillOpacity: 1
           })
-                  .addTo(api.layer.building);
+                  .addTo(api.layer.decoration);
         }
         if (this.coords[i].door != null) {
           new L.circleMarker(this.coords[i], {
@@ -336,7 +342,7 @@
             color: '#666',
             fillOpacity: 0.8
           })
-                  .addTo(api.layer.building);
+                  .addTo(api.layer.decoration);
         }
       }
     }
