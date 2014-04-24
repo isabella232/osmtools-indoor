@@ -135,7 +135,7 @@ api.loadShell = function() {
   });
 };
 
-api.loadBuilding = function(id, outline , idLevel, idRoom) {
+api.loadBuilding = function(id, idLevel, idRoom) {
   map.query.startAnimation();
   
   $('.leaflet-control-requery-info').fadeOut('fast');
@@ -153,8 +153,8 @@ api.loadBuilding = function(id, outline , idLevel, idRoom) {
     success: function(data) {
       if (map.hasLayer(api.layer.outlines))
         map.removeLayer(api.layer.outlines);
-//      if (api.all_outlines.length == 0)
-//        api.parseShell(data);
+      if (api.all_outlines.length == 0)
+        api.parseShell(data);
       api.parseBuilding(data);
       if(idLevel != null && idRoom != null){
       	api.building.drawLevel(api.idToNumLevel(idLevel));
