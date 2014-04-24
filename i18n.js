@@ -24,6 +24,16 @@
      * Website 
      * -------------------------------------------------------------------------
      */
+	'Go Up' :{
+		'fr': 'Monter',
+		'it': 'Salire',
+		'pl': 'Wzrost'
+	},
+	'Go Down':{
+		'fr': 'Descendre',
+		'it': 'Scendere',
+		'pl': 'Spadać'
+	},
     'Info' :{
         'fr': 'Informations',
         'it': 'Informazioni',

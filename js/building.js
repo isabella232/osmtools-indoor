@@ -276,13 +276,18 @@
 		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
 	};
 	if(this.type == "verticalpassage"){
-		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building);//.on('click', function() {
-			// if(building.level == 0){
-				// L.popup(this.coords,{closeButton:true}).setContent('monter');
-			// }else{
-				// L.popup(this.coords,{closeButton:true}).setContent('monter / descendre');
-			// }
-		// }
+		room = this ;
+		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building).on('click', function() {
+		var content = "";	
+			if(api.building.currentLevel ==  0){
+				content = '<button>'+translate('Go Up')+'</button>';
+			}else{
+				content = '<button>'+translate('Go Up')+'</button><button>'+translate('Go Down')+'</button>';
+			}
+			L.popup().setLatLng(room.center()).setContent(content).openOn(map);
+
+			 //alert('Clicked on a group!');
+		})
 	};
 	if(this.access == "emergency" && this.type == "verticalpassage"){
 		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.building);
