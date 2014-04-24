@@ -179,17 +179,21 @@ api.loadBuilding = function(id, idLevel, idRoom) {
     type: 'GET',
     crossDomain: true,
     success: function(data) {
-      if (map.hasLayer(api.layer.outlines))
-        map.removeLayer(api.layer.outlines);
+      //if (map.hasLayer(api.layer.outlines))
+        //map.removeLayer(api.layer.outlines);
+		
       if (api.all_outlines.length == 0)
         api.parseShell(data);
       api.parseBuilding(data);
+	 
       if(idLevel != null && idRoom != null){
       	if (map.getZoom() < 20 )
       		map.setZoom(20);
       	api.building.drawLevel(api.idToNumLevel(idLevel));
 	  	api.building.popup(idLevel,idRoom);
       } 
+	  map.removeLayer(api.layer.building);
+	  map.addLayer(api.layer.building);
       map.query.stopAnimation();
       $('.leaflet-control-requery').fadeOut('fast');
       $('.leaflet-control-requery-info').fadeOut('fast');
