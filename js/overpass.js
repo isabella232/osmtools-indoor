@@ -32,6 +32,44 @@ api.tagBuilding = function(id) {
           ');' +
           'out;';
 };
+/**
+ * QUERY
+ * -----------------------------------------------------------------------------
+ */
+ 
+api.geosearch = function(latitude, longitude, salle) {
+  var idbuilding;
+  var idlevel;
+  var idway;
+  //Exec Request
+  $();
+  //Compter le nombre de chemin
+  
+  //S'il existe plusieurs chemins, sélectionner le plus proche
+  //...
+  var type = $(this).attr("type");
+  var type = $(this).attr("role");
+  //Trouver le idway
+  $(this).find('member').each(function() {
+    if (type == "way")
+      idway = $(this).attr("ref");
+  });
+  
+  //Exec requête qui retourne le level contenant cet idway
+  //...
+  $(this).find('member').each(function() {
+    if (type == "relation")
+      idway = $(this).attr("ref");
+  });
+  
+  //Exec requête qui retourne le building contenant cet idlevel
+  //...
+  $(this).find('member').each(function() {
+    if (role == "buildingpart")
+      idbuilding = $(this).attr("ref");
+  });
+}
+
 
 /**
  * QUERY
