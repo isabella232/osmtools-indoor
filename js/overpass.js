@@ -72,21 +72,23 @@ api.parseRoom = function(latitude, longitude, salle, data){
   //S'il existe plusieurs chemins, sélectionner le plus proche
   //...sinon :
   if(nbway > 1){
-  	
+  	var center = L.latLng(latitude, longitude);
   	var distances = new Array();
   	var lesids = new Array();
-	$(data).find('relation').each(function() {
-		var id = $(this).attr("id");
-		$(this).find('tag').each(function() {
-			if($(this).attr("k") == "buildingpart" && $(this).attr("v") == "room"){
-				lesids.push(id);
-				distances.push($(this).distanceTo(latiture, longitude));
-			}
-		});
+	$(data).find('way').each(function() {
+		var idway = $(this).attr("id");
+                var idnd = $(this).find('nd').first().attr('ref');
+                var latlng;
+	        lesids.push(idway);
+                $(data).find('node').each(function(){
+                   if ($(this).attr('id') == idnd) 
+                     latlng = L.latLng($(this).attr('lat'), $(this).attr('lon')) ;
+                });
+	        distances.push(latlng.distanceTo(center));
 	});
 	
 	for(var i=0; i<distances.length;i++) {
-		if(distances(i) == distances.min()) {
+		if(distances[i] == distances.min()) {
 		
 			$(data).find('relation').each(function() {
 				if((this).attr("id") == lesids(i)){
