@@ -545,6 +545,7 @@ api.parseBuilding = function(data) {
   //finish
   if (api.building != undefined) {
     api.building.drawLevelSwitcher();
+    api.building.updateLevelSwitcher();
     if (api.building.drawLevel()) {
 
 
@@ -553,7 +554,7 @@ api.parseBuilding = function(data) {
       $('.tools').show();
 
       //map.invalidateSize();
-      $("#indoor-levels-0").button('toggle');
+      //$("#indoor-levels-0").button('toggle');
     }
   } else {
     alert("Something went wrong (no building found)!");
