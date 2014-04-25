@@ -53,8 +53,10 @@
             var center = map.getCenter(),
                 zoom = map.getZoom(),
                 precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
-                return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom ;
-           	
+                if (api.room != null) 
+                	return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom + "&room="+ api.room ;
+                else
+           			return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom;
             /*    
                     + [zoom,
                 center.lat.toFixed(precision),
@@ -112,6 +114,7 @@
                 this.movingMap = true;
                 
                 if(parsed.room != null){
+                	api.room = parsed.room;
                 	api.geosearch(parsed.center.lat,parsed.center.lng,parsed.room)
                 }else{
                 	this.map.setView(parsed.center, parsed.zoom);

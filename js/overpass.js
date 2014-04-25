@@ -5,7 +5,7 @@ api.layer.building = new L.LayerGroup();
 api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
-
+api.room ;
 api.shells = new Array();       //list of outlines
 api.all_outlines = new Array();       //list of outlines
 api.building;                   //building
