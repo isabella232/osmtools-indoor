@@ -47,13 +47,17 @@
         <h3></h3>
         <div id="indoor-escape"><button class="btn"><span class="typcn typcn-backspace"><span><span class="btn-text"></span></button></div>
         <div id="indoor-levels"></div>
-        <select class="input-medium" id="indoor-categories">
-          <option value="All" selected><script>document.write(translate('All'));</script></option>
-          <option value="Elevator"><script>document.write(translate('Elevator'));</script></option>
-          <option value="Stairs"><script>document.write(translate('Stairs'));</script></option>
-          <option value="WC"><script>document.write(translate('WC'));</script></option>
-        </select>
-        <div id="indoor-rooms"></div>
+		<div><button class="btn" onclick="$('#indoor-list').toggle()"><img src="img/flecheBas.png"/></button></div>
+		
+		<div id="indoor-list" style="display: none">
+			<select class="input-medium" id="indoor-categories">
+				<option value="All" selected><script>document.write(translate('All'));</script></option>
+				<option value="Elevator"><script>document.write(translate('Elevator'));</script></option>
+				<option value="Stairs"><script>document.write(translate('Stairs'));</script></option>
+				<option value="WC"><script>document.write(translate('WC'));</script></option>
+			</select>
+			<div id="indoor-rooms"></div>
+		</div>
       </div>
 
       <div id="indoor-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="indoor-window" aria-hidden="true">

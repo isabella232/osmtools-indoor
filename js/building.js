@@ -153,7 +153,7 @@
       map.setView(room.center());
 	  L.popup()
               .setLatLng(room.center(room))
-              .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.levels[\''+level_+'\'].rooms['+room_+'].modal();">details</button></div>')
+              .setContent(room.label()) 
               .openOn(map);
 			  
     };
