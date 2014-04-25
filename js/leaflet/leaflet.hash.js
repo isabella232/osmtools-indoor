@@ -37,7 +37,7 @@
                 if (isNaN(zoom) ){     	
                         zoom = 18;
                  }	
-                else if ( isNaN(lat) || isNaN(lon) ) {
+                if ( isNaN(lat) || isNaN(lon) ) {
                     return false;
                 }
                 else {
@@ -53,8 +53,8 @@
             var center = map.getCenter(),
                 zoom = map.getZoom(),
                 precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
-            
-            return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom;
+                return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom ;
+           	
             /*    
                     + [zoom,
                 center.lat.toFixed(precision),
