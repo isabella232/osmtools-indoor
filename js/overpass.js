@@ -62,7 +62,7 @@ api.geosearch = function(latitude, longitude, salle) {
 api.parseRoom = function(latitude, longitude, salle, data){
   var idbuilding;
   var idlevel;
-  var idway;
+  var idway = salle;
   var nbway = 0;
   //Compter le nombre de chemin
   $(data).find('way').each(function() {
@@ -72,13 +72,44 @@ api.parseRoom = function(latitude, longitude, salle, data){
   //S'il existe plusieurs chemins, sélectionner le plus proche
   //...sinon :
   if(nbway > 1){
-  
+  	
+  	var distances = new Array();
+  	var lesids = new Array();
+	$(data).find('relation').each(function() {
+		var id = $(this).attr("id");
+		$(this).find('tag').each(function() {
+			if($(this).attr("k") == "buildingpart" && $(this).attr("v") == "room"){
+				lesids.push(id);
+				distances.push($(this).distanceTo(latiture, longitude));
+			}
+		});
+	});
+	
+	for(var i=0; i<distances.length;i++) {
+		if(distances(i) == distances.min()) {
+		
+			$(data).find('relation').each(function() {
+				if((this).attr("id") == lesids(i)){
+       				var id = $(this).attr("id");
+       				$(this).find('tag').each(function() {
+        			if ($(this).attr("k") ==  "type") {
+            			if ($(this).attr("v") == "building")
+            				idbuilding = id;
+           				else if ($(this).attr("v") == "level")
+             				idlevel = id;
+         			}
+       				});
+       			}
+    		});
+    	}
+    }	
+	
+	
   }else{
-     idway = salle;
       $(data).find('relation').each(function() {
-       var id = $(this).attr("id")
+       var id = $(this).attr("id");
        $(this).find('tag').each(function() {
-         if ( $(this).attr("k") ==  "type") {
+         if ($(this).attr("k") ==  "type") {
            if ($(this).attr("v") == "building")
              idbuilding = id;
            else if ($(this).attr("v") == "level")
