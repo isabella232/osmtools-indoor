@@ -24,11 +24,14 @@ api.tagShell = function() {
     boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
             b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
   }
-  return 'relation' + boundary + '["type"="level"];relation(br)["type"="building"];relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
+  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
 };
 
 api.tagBuilding = function(id) {
-  return text = '(relation(' + id + ');>>->.rels;>;);out;';
+  return text = '(' +
+          'relation(' + id + ');>>->.rels;>;' +
+          ');' +
+          'out;';
 };
 /**
  * QUERY
@@ -36,7 +39,8 @@ api.tagBuilding = function(id) {
  */
  
 api.tagRoom = function(latitude, longitude, salle){
- return "(way(around:500,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);out;" ;
+ return "(way(around:100,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);"+
+"out body qt;" ;
 };
 
 api.geosearch = function(latitude, longitude, salle) {
@@ -229,8 +233,8 @@ api.layer.reloadBuilding(true);
 
 api.loadLevelPopup = function(idLevel, idRoom){
 	if(idLevel != null && idRoom != null){
-      	if (map.getZoom() < 20 )
-      		map.setZoom(20);
+      	if (map.getZoom() < 18 )
+      		map.setZoom(18);
       	if (api.building.currentLevel != null && api.idToNumLevel(idLevel) == api.building.currentLevel) 
       			  	api.building.popup(idLevel,idRoom);
         else {
@@ -402,8 +406,6 @@ api.parseBuilding = function(data) {
 		
 	  if(key =="buildingpart:verticalpassage" && value.match(/(elevator)/))
 		way.type = value;
-	  if(key == "buildingpart:verticalpassage:floorrange")
-		way.range = value ;
 		
       if (key == "shop" && way.shop == null)
         way.shop = value;
@@ -543,7 +545,6 @@ api.parseBuilding = function(data) {
   //finish
   if (api.building != undefined) {
     api.building.drawLevelSwitcher();
-    api.building.updateLevelSwitcher();
     if (api.building.drawLevel()) {
 
 
@@ -552,7 +553,7 @@ api.parseBuilding = function(data) {
       $('.tools').show();
 
       //map.invalidateSize();
-      //$("#indoor-levels-0").button('toggle');
+      $("#indoor-levels-0").button('toggle');
     }
   } else {
     alert("Something went wrong (no building found)!");
