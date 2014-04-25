@@ -29,7 +29,7 @@
     }
 	
 	this.drawInside = function(){
-		new L.Polygon(this.coords,{stroke:false,fillColor:'#B7C0BF',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
+		new L.Polygon(this.coords,{color:'#B7C0BF',opacity:'1',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
 	}
 	  
 
@@ -54,17 +54,31 @@
     this.levels = levels;
     this.shell;
 
+    this.levelIds = new Array();
+    this.levels.forEach(function(l){
+        this.levelIds.push(l.level);
+    }, this );
+    this.levelIds.sort();
+
   this.currentType = 'All';
 
   this.getLevelIds = function() {
-    var arr = [];
-    this.levels.forEach(function(l){
-        arr.push(l.level);
-    });
-    return arr.sort();
+     return this.levelIds;
+  }
+  this.addNumToString = function(n){
+	return (parseInt(api.building.currentLevel)+n).toString()
   }
   this.currentLevel = this.getLevelIds()[0];
-
+  this.getLevelPerId = function(idRoom){
+	var arr = [] ;
+	api.building.levels.forEach(function(l){
+		l.rooms.forEach(function(r){
+			if(idRoom == r.id)
+				arr.push(l.level);
+		})
+	})
+	return arr.sort();
+  }
   /** Return level n **/
   this.getLevel = function(n) {
     return this.levels.filter(function(l){ return (l.level == n) ; }).pop();
@@ -75,16 +89,18 @@
     if (typeof n === 'undefined') { n = this.currentLevel; }
     var level = this.getLevel(n);
     if (level != undefined) {
-	      api.layer.building.clearLayers();
-		  if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
-		  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
-		  }
+      api.layer.building.clearLayers();
+      api.layer.decoration.clearLayers();
+      if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
+  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
+      }
       level.draw();
       map.closePopup();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
       api.building.updateLevelSwitcher();
 
+      api.layer.reloadBuilding();
       return true;
     }
     alert("Something went wrong (no level " + n + ")!");
@@ -96,31 +112,25 @@
      * Draw level switcher
      */
     this.drawLevelSwitcher = function() {
-      var levels = api.building.levels.slice();
-      levels.sort(function(a, b) {
-        return a.level - b.level;
-      });
+      var levels = api.building.getLevelIds();
 
       //add text
       $('#indoor-navigation h3').text(this.name);
       $('#indoor-escape button').attr('title', translate('Close'));
 
       var txt = '<div class="btn-group" data-toggle="buttons">';
-      for (var i in levels) {
-        var l = levels[i].level;
+      levels.forEach(function(l) {
         txt += '<label class="btn" id="indoor-levels-' + l + '" onclick="api.building.drawLevel(' + l + ');"><input type="radio">' + l + '</label>';
-      }
+      });
       txt += '</div>';
       $("#indoor-levels").html(txt);
     };
     
     
     this.updateLevelSwitcher = function(){
-    	var levels = api.building.levels.slice();
-		for (var i in levels) {
-        	var l = levels[i].level;
-    		$('#indoor-levels-'+l).removeClass('active');  
-		}	
+    	api.building.getLevelIds().forEach(function(l) {
+          $('#indoor-levels-'+l).removeClass('active');  
+	});	
     	$('#indoor-levels-'+api.building.currentLevel).addClass('active');  	
     }
 
@@ -162,7 +172,7 @@
     this.shell; //@TODO
     this.coords;
     this.name = "?";
-
+	
     /** Write list of all room on level **/
     this.list = function() {
 	var tmp = new Array();
@@ -250,6 +260,7 @@
     this.contact = {};
     this.opening_hours;
     this.polygon;
+	
 
     /** Draw room **/
     this.draw = function() {
@@ -271,38 +282,48 @@
                 helper.modal();
               });
 	if (this.label() != null) {
-		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.building);
+		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.decoration);
 	} ;
 	if(this.shop == "toilets"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.decoration);
 	};
 	if(this.type == "verticalpassage"){
-		room = this ;
-		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.building).on('click', function() {
+		var room = this ;
+		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.decoration).on('click', function() {
 		var content = "";	
-			if(api.building.currentLevel ==  0){
-				content = '<button>'+translate('Go Up')+'</button>';
-			}else{
-				content = '<button>'+translate('Go Up')+'</button><button>'+translate('Go Down')+'</button>';
-			}
-			L.popup().setLatLng(room.center()).setContent(content).openOn(map);
-
-			 //alert('Clicked on a group!');
+			
+			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(1)) != -1)
+				content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
+			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(-1)) != -1)
+				content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
+			if(content =="")
+				content= translate('This stairway goes nowhere') ;
+			L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
 		})
 	};
 	if(this.access == "emergency" && this.type == "verticalpassage"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
 	};
 	if(this.type == "elevator"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/elevator.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/elevator.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
 	} ;
 	if(this.shop == "bicycle_parking"){
-		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/parking_velos.png', iconSize:[30,30]})}).addTo(api.layer.building);
+		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/parking_velos.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
 	};
      // if (this.type == "corridor")
      //   this.polygon;//.bringToBack();
 
       for (var i in this.coords) {
+        if (this.coords[i].entrance == 'main') {
+          new L.circleMarker(this.coords[i], {
+            radius: 3,
+            weight: 2,
+            clickable: false,
+            color: 'blue',
+            fillOpacity: 1
+          })
+                  .addTo(api.layer.building);
+        }
         if (this.coords[i].entrance != null) {
           new L.circleMarker(this.coords[i], {
             radius: (this.coords[i].entrance == 'main') ? 4 : 2,
@@ -311,7 +332,7 @@
             color: 'green',
             fillOpacity: 1
           })
-                  .addTo(api.layer.building);
+                  .addTo(api.layer.decoration);
         }
         if (this.coords[i].door != null) {
           new L.circleMarker(this.coords[i], {
@@ -321,7 +342,7 @@
             color: '#666',
             fillOpacity: 0.8
           })
-                  .addTo(api.layer.building);
+                  .addTo(api.layer.decoration);
         }
       }
     }

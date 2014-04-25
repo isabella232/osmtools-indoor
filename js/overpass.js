@@ -2,6 +2,7 @@ var api = {};
 api.layer = {};
 
 api.layer.building = new L.LayerGroup();
+api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
 
@@ -37,70 +38,117 @@ api.tagBuilding = function(id) {
  * -----------------------------------------------------------------------------
  */
  
+api.tagRoom = function(latitude, longitude, salle){
+ return "[out:json][timeout:25];"+
+"(way(around:100,50.6097504,3.1373735)['buildingpart'='room']['ref'='105']->.a;.a >;.a <<;);"+
+"out skel qt;" ;
+};
+
 api.geosearch = function(latitude, longitude, salle) {
+  
+  //Exec Request
+  $.ajax({
+    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagRoom(latitude, longitude, salle)),
+    type: 'GET',
+    crossDomain: true,
+    success: function(data) {
+      api.parseRoom(latitude, longitude, salle, data);
+    }
+  });
+  
+};
+api.parseRoom = function(latitude, longitude, salle, data){
   var idbuilding;
   var idlevel;
   var idway;
-  //Exec Request
-  $();
+  var nbway = 0;
   //Compter le nombre de chemin
+  $(data).find('way').each(function() {
+  	nbway = nbway+1;
+  });
   
   //S'il existe plusieurs chemins, sélectionner le plus proche
-  //...
-  var type = $(this).attr("type");
-  var type = $(this).attr("role");
-  //Trouver le idway
-  $(this).find('member').each(function() {
-    if (type == "way")
-      idway = $(this).attr("ref");
-  });
+  //...sinon :
+  if(nbway > 1){
   
-  //Exec requête qui retourne le level contenant cet idway
-  //...
-  $(this).find('member').each(function() {
-    if (type == "relation")
-      idway = $(this).attr("ref");
-  });
+  }else{
+ 	 //Trouver le idway  
+ 	 //FIND WAY
+ 	 $(data).find('way').each(function() {
+ 	   idway = $(this).attr("ref");
+ 	 });
   
-  //Exec requête qui retourne le building contenant cet idlevel
-  //...
-  $(this).find('member').each(function() {
-    if (role == "buildingpart")
-      idbuilding = $(this).attr("ref");
-  });
+ 	//Trouver le level contenant cet idway
+  	//FIND LEVEL
+  	$(data).find('relation').each(function() {
+    	$(this).find('member').each(function() {
+          if ($(this).attr("ref") == idway && $(this).attr("role") == "shell")
+          idlevel = $(this).attr("ref");
+        });
+    });
+ 	
+  	//Trouver le building qui contient ce level
+ 	//FIND BUILDING
+ 	$(data).find('relation').each(function() {
+ 	   $(this).find('member').each(function() {
+  	    if ($(this).attr("type") == "relation" && /^level/.test($(this).attr("role"))) 
+  	      idbuiliding = buildingId[$(this).attr("ref")];
+ 	   });
+ 	});
+ 	
+  }
 }
 
+api.layer.reloadBuilding =function(clear) {
+  api.layer.removeBuilding(clear);
 
+  map.addLayer(api.layer.building);
+  if (map.getZoom() > 19) {
+  map.addLayer(api.layer.decoration);
+  } else {
+    if (map.hasLayer(api.layer.decoration))
+      map.removeLayer(api.layer.decoration);
+  }
+}
+api.layer.removeBuilding = function(clear) {
+  if (clear == true) {
+      api.layer.building.clearLayers();
+      api.layer.decoration.clearLayers();
+  }
+  if (map.hasLayer(api.layer.building)) {
+    map.removeLayer(api.layer.building);
+  }
+  if (map.hasLayer(api.layer.decoration)) {
+    map.removeLayer(api.layer.decoration);
+  }
+}
 /**
  * QUERY
  * -----------------------------------------------------------------------------
  */
 api.query = function() {
   if (map.layer === 1) {
-    //download elements for zoom 10+
-    if (map.getZoom() > 1) {
-      $('.leaflet-control-requery-info').html(translate('Click to load buildings'));
-      //api.loadShell();
-      if (map.getZoom() < 16) {
-        //full outline
-        map.removeLayer(api.layer.outlines);
-        map.addLayer(api.layer.pins);
-      } else {
-        //pin only
-        map.removeLayer(api.layer.pins);
-        map.addLayer(api.layer.outlines);
-      }
-    } else
-      $('.leaflet-control-requery-info').html(translate('<strong>Zoom in</strong> to load buildings'));
+    $('.leaflet-control-requery-info').html(translate('Click to load buildings'));
+    if (map.getZoom() < 16) {
+      //full outline
+      map.removeLayer(api.layer.outlines);
+      map.addLayer(api.layer.pins);
+    } else {
+      //pin only
+      map.removeLayer(api.layer.pins);
+      map.addLayer(api.layer.outlines);
+    }
   } else if (map.layer === 2) {
     if (map.getZoom() < 16) {
       //pin only
-      map.removeLayer(api.layer.building);
+      api.layer.removeBuilding();
+      map.removeLayer(api.layer.outlines);
       map.addLayer(api.layer.pins);
     } else {
       //outline
       map.removeLayer(api.layer.pins);
-      map.addLayer(api.layer.building);
+      map.addLayer(api.layer.outlines);
+      api.layer.reloadBuilding();
       for (var i in api.building.getLevel(api.building.currentLevel).pois)
         api.building.getLevel(api.building.currentLevel).pois[i].draw();
     }
@@ -115,13 +163,7 @@ api.loadShell = function() {
   //$('#map-zoominfo').css('display', 'none');
 
   map.layer = 1;
-  if (map.hasLayer(api.layer.building)) {
-    api.layer.building.clearLayers();
-    map.removeLayer(api.layer.building);
-
-  }
-  if (!map.hasLayer(api.layer.outlines))
-    map.addLayer(api.layer.outlines);
+  api.layer.removeBuilding(true);
   map.closePopup();
 
   $.ajax({
@@ -142,6 +184,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
   $('.leaflet-control-requery-info').fadeOut('fast');
   map.layer = 2;
 
+<<<<<<< HEAD
   if (!map.hasLayer(api.layer.building)) {
     api.layer.building.clearLayers();
     map.addLayer(api.layer.building);
@@ -150,17 +193,33 @@ api.loadBuilding = function(id, idLevel, idRoom) {
     api.loadLevelPopup(idLevel,idRoom );	  
   }
   else { 
+=======
+api.layer.reloadBuilding(true);
+
+>>>>>>> FETCH_HEAD
   $.ajax({
     url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
     type: 'GET',
     crossDomain: true,
     success: function(data) {
-      if (map.hasLayer(api.layer.outlines))
-        map.removeLayer(api.layer.outlines);
+      //if (map.hasLayer(api.layer.outlines))
+        //map.removeLayer(api.layer.outlines);
+		
       if (api.all_outlines.length == 0)
         api.parseShell(data);
       api.parseBuilding(data);
+<<<<<<< HEAD
       api.loadLevelPopup(idLevel,idRoom );	  
+=======
+	 
+      if(idLevel != null && idRoom != null){
+      	if (map.getZoom() < 20 )
+      		map.setZoom(20);
+      	api.building.drawLevel(api.idToNumLevel(idLevel));
+	  	api.building.popup(idLevel,idRoom);
+      } 
+      api.layer.reloadBuilding();
+>>>>>>> FETCH_HEAD
       map.query.stopAnimation();
       $('.leaflet-control-requery').fadeOut('fast');
       $('.leaflet-control-requery-info').fadeOut('fast');
@@ -246,6 +305,7 @@ api.parseShell = function(data) {
       }
     }
   });
+  
   api.shells.forEach(function(sid){
     var o = outlines[sid];
     if (typeof buildingId[o.relationId] != 'undefined') {
