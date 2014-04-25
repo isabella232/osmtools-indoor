@@ -39,11 +39,12 @@
                  }	
                 else if ( isNaN(lat) || isNaN(lon) ) {
                     return false;
-                } 
+                }
                 else {
                     return {
                         center: new L.LatLng(lat, lon),
-                        zoom: zoom 
+                        zoom: zoom,
+                        room: room 
                     };
                 }
         },
@@ -110,8 +111,11 @@
                 // console.log("parsed:", parsed.zoom, parsed.center.toString());
                 this.movingMap = true;
                 
-                this.map.setView(parsed.center, parsed.zoom);
-                
+                if(parsed.room != null){
+                	api.geosearch(parsed.center.lat,parsed.center.lng,parsed.room)
+                }else{
+                	this.map.setView(parsed.center, parsed.zoom);
+                }
                 this.movingMap = false;
                 //alert(parsed.room);
             } else {
