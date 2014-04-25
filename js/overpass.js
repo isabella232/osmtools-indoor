@@ -111,30 +111,13 @@ api.parseRoom = function(latitude, longitude, salle, data){
                 var idtemp2 = $(this).attr('id');
 		$(this).find('member').each(function() {
 			if($(this).attr('ref') == idlevel)
-                          iduilding = idtemp2 ;
+                          idbuilding = idtemp2 ;
 				
 		});
 	});
 	
 	
-	/*for(var i=0; i<distances.length;i++) {
-		if(distances[i] == min) {
-		
-			$(data).find('relation').each(function() {
-				if((this).attr("id") == lesids(i)){
-       				var id = $(this).attr("id");
-       				$(this).find('tag').each(function() {
-        			if ($(this).attr("k") ==  "type") {
-            			if ($(this).attr("v") == "building")
-            				idbuilding = id;
-           				else if ($(this).attr("v") == "level")
-             				idlevel = id;
-         			}
-       				});
-       			}
-    		});
-    	}
-    }*/
+
 	
 	
   }else{
@@ -149,31 +132,7 @@ api.parseRoom = function(latitude, longitude, salle, data){
          }
        });
       });
-/*
- 	 //Trouver le idway  
- 	 //FIND WAY
- 	 $(data).find('way').each(function() {
- 	   idway = $(this).attr("ref");
- 	 });
-  
- 	//Trouver le level contenant cet idway
-  	//FIND LEVEL
-  	$(data).find('relation').each(function() {
-    	$(this).find('member').each(function() {
-          if ($(this).attr("ref") == idway && $(this).attr("role") == "shell")
-          idlevel = $(this).attr("ref");
-        });
-    });
- 	
-  	//Trouver le building qui contient ce level
- 	//FIND BUILDING
- 	$(data).find('relation').each(function() {
- 	   $(this).find('member').each(function() {
-  	    if ($(this).attr("type") == "relation" && /^level/.test($(this).attr("role"))) 
-  	      idbuiliding = buildingId[$(this).attr("ref")];
- 	   });
- 	});
- */	
+
   }
   if (idway == null || idlevel == null || idbuilding == null )
     return false;
