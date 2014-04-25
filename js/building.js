@@ -119,6 +119,7 @@
       //add text
       $('#indoor-navigation h3').text(this.name);
       $('#indoor-escape button').attr('title', translate('Close'));
+      $('#indoor-list-btn button').attr('title', translate('Show list of rooms'));
 
       var txt = '<div class="btn-group" data-toggle="buttons">';
       levels.forEach(function(l) {

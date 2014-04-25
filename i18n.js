@@ -9,7 +9,7 @@
 		}else{
 			var language = navigator.language; 
 		}
-		if(language.indexOf('en') > -1){
+		if((typeof translation[token] === 'undefined') || (language.indexOf('en') > -1)){
 			return token;
 		}
 		$.each(translation[token], function(k,v){
