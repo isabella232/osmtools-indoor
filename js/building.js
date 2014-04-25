@@ -292,22 +292,24 @@
 		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.decoration).on('click', function() {
 		var content = "";
 		var str = room.range;
+		var up = '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>' ;
+		var down = '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>' ;
 		var patt = new RegExp(/^(-?[0-9]+)\s*(to|-|;)\s*(-?[0-9]+)$/) ;
 			if(str != null){
 				var res = str.match(patt) ;
 				if(parseInt(res[3]) >= (parseInt(api.building.currentLevel)+1)){
-					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
+					content = content + up;
 				}
 				if(parseInt(res[1]) <= (parseInt(api.building.currentLevel)-1)){
-					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
+					content = content + down;
 				}
 				L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
 			}else{
 				if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(1)) != -1)
-					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
+					content = content + up;
 				if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(-1)) != -1)
-					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
-				if(content =="")
+					content = content + down;
+				if(content == "")
 					content= translate('This stairway goes nowhere') ;
 			L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
 			}	
