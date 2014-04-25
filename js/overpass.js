@@ -87,8 +87,14 @@ api.parseRoom = function(latitude, longitude, salle, data){
 	        distances.push(latlng.distanceTo(center));
 	});
 	
+	var min=distances[0];	
+	for(var j=0; j<distances.length;j++) {
+		if(distances[j]<min)
+			min = distances[j];
+	}
+	
 	for(var i=0; i<distances.length;i++) {
-		if(distances[i] == distances.min()) {
+		if(distances[i] == min) {
 		
 			$(data).find('relation').each(function() {
 				if((this).attr("id") == lesids(i)){
