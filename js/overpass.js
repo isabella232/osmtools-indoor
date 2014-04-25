@@ -24,14 +24,11 @@ api.tagShell = function() {
     boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
             b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
   }
-  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
+  return 'relation' + boundary + '["type"="level"];relation(br)["type"="building"];relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
 };
 
 api.tagBuilding = function(id) {
-  return text = '(' +
-          'relation(' + id + ');>>->.rels;>;' +
-          ');' +
-          'out;';
+  return text = '(relation(' + id + ');>>->.rels;>;);out;';
 };
 /**
  * QUERY
@@ -39,8 +36,7 @@ api.tagBuilding = function(id) {
  */
  
 api.tagRoom = function(latitude, longitude, salle){
- return "(way(around:100,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);"+
-"out body qt;" ;
+ return "(way(around:500,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);out;" ;
 };
 
 api.geosearch = function(latitude, longitude, salle) {
