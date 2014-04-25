@@ -100,9 +100,18 @@ api.parseRoom = function(latitude, longitude, salle, data){
 	
 	$(data).find('relation').each(function() {
                 var idtemp = $(this).attr('id');
-		$(data).find('member').each(function() {
+		$(this).find('member').each(function() {
 			if($(this).attr('ref') == idmin)
                           idlevel = idtemp ;
+				
+		});
+	});
+	
+	$(data).find('relation').each(function() {
+                var idtemp2 = $(this).attr('id');
+		$(this).find('member').each(function() {
+			if($(this).attr('ref') == idlevel)
+                          iduilding = idtemp2 ;
 				
 		});
 	});
