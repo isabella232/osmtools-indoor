@@ -87,13 +87,26 @@ api.parseRoom = function(latitude, longitude, salle, data){
 	        distances.push(latlng.distanceTo(center));
 	});
 	
-	var min=distances[0];	
+	//Recherche d'indice : la plus petite distance
+	var min=0;
+	var idmin;
 	for(var j=0; j<distances.length;j++) {
-		if(distances[j]<min)
+		if(distances[j]<min){
 			min = distances[j];
+			idmin=j;
+		}
 	}
+	//lesids(idmin) est l'id du way le plus proche
 	
-	for(var i=0; i<distances.length;i++) {
+	$(data).find('relation').each(function() {
+		$(data).find('member').each(function() {
+			if($(this).attr('ref') == idway)
+				
+		});
+	});
+	
+	
+	/*for(var i=0; i<distances.length;i++) {
 		if(distances[i] == min) {
 		
 			$(data).find('relation').each(function() {
@@ -110,7 +123,7 @@ api.parseRoom = function(latitude, longitude, salle, data){
        			}
     		});
     	}
-    }	
+    }*/
 	
 	
   }else{
