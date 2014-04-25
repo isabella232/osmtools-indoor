@@ -180,11 +180,8 @@ api.loadShell = function() {
 
 api.loadBuilding = function(id, idLevel, idRoom) {
   map.query.startAnimation();
-  
   $('.leaflet-control-requery-info').fadeOut('fast');
   map.layer = 2;
-
-<<<<<<< HEAD
   if (!map.hasLayer(api.layer.building)) {
     api.layer.building.clearLayers();
     map.addLayer(api.layer.building);
@@ -193,10 +190,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
     api.loadLevelPopup(idLevel,idRoom );	  
   }
   else { 
-=======
 api.layer.reloadBuilding(true);
-
->>>>>>> FETCH_HEAD
   $.ajax({
     url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
     type: 'GET',
@@ -208,18 +202,8 @@ api.layer.reloadBuilding(true);
       if (api.all_outlines.length == 0)
         api.parseShell(data);
       api.parseBuilding(data);
-<<<<<<< HEAD
       api.loadLevelPopup(idLevel,idRoom );	  
-=======
-	 
-      if(idLevel != null && idRoom != null){
-      	if (map.getZoom() < 20 )
-      		map.setZoom(20);
-      	api.building.drawLevel(api.idToNumLevel(idLevel));
-	  	api.building.popup(idLevel,idRoom);
-      } 
       api.layer.reloadBuilding();
->>>>>>> FETCH_HEAD
       map.query.stopAnimation();
       $('.leaflet-control-requery').fadeOut('fast');
       $('.leaflet-control-requery-info').fadeOut('fast');
@@ -240,6 +224,7 @@ api.loadLevelPopup = function(idLevel, idRoom){
         }	
       } 
 }
+
 //fonction de conversion de l'id du level en num (0,1 ...)
 api.idToNumLevel = function(idLevel){
 	return api.building.levels[idLevel].level ;
