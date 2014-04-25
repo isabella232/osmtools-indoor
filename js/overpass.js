@@ -39,9 +39,8 @@ api.tagBuilding = function(id) {
  */
  
 api.tagRoom = function(latitude, longitude, salle){
- return "[out:json][timeout:25];"+
-"(way(around:100,50.6097504,3.1373735)['buildingpart'='room']['ref'='105']->.a;.a >;.a <<;);"+
-"out skel qt;" ;
+ return "(way(around:100,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);"+
+"out body qt;" ;
 };
 
 api.geosearch = function(latitude, longitude, salle) {
@@ -52,7 +51,10 @@ api.geosearch = function(latitude, longitude, salle) {
     type: 'GET',
     crossDomain: true,
     success: function(data) {
-      api.parseRoom(latitude, longitude, salle, data);
+      var result = api.parseRoom(latitude, longitude, salle, data);
+      console.log(result);
+      if (result)
+        api.loadBuilding(result.building, result.level, result.room);
     }
   });
   
@@ -72,6 +74,19 @@ api.parseRoom = function(latitude, longitude, salle, data){
   if(nbway > 1){
   
   }else{
+     idway = salle;
+      $(data).find('relation').each(function() {
+       var id = $(this).attr("id")
+       $(this).find('tag').each(function() {
+         if ( $(this).attr("k") ==  "type") {
+           if ($(this).attr("v") == "building")
+             idbuilding = id;
+           else if ($(this).attr("v") == "level")
+             idlevel = id;
+         }
+       });
+      });
+/*
  	 //Trouver le idway  
  	 //FIND WAY
  	 $(data).find('way').each(function() {
@@ -95,8 +110,12 @@ api.parseRoom = function(latitude, longitude, salle, data){
   	      idbuiliding = buildingId[$(this).attr("ref")];
  	   });
  	});
- 	
+ */	
   }
+  if (idway == null || idlevel == null || idbuilding == null )
+    return false;
+  else
+    return {room: idway, level: idlevel, building: idbuilding }
 }
 
 api.layer.reloadBuilding =function(clear) {
