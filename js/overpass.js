@@ -88,19 +88,21 @@ api.parseRoom = function(latitude, longitude, salle, data){
 	});
 	
 	//Recherche d'indice : la plus petite distance
-	var min=0;
+	var min=5000;
 	var idmin;
 	for(var j=0; j<distances.length;j++) {
 		if(distances[j]<min){
 			min = distances[j];
-			idmin=j;
+			idmin=lesids[j];
 		}
 	}
 	//lesids(idmin) est l'id du way le plus proche
 	
 	$(data).find('relation').each(function() {
+                var idtemp = $(this).attr('id');
 		$(data).find('member').each(function() {
-			if($(this).attr('ref') == idway)
+			if($(this).attr('ref') == idmin)
+                          idlevel = idtemp ;
 				
 		});
 	});
