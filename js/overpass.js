@@ -402,6 +402,8 @@ api.parseBuilding = function(data) {
 		
 	  if(key =="buildingpart:verticalpassage" && value.match(/(elevator)/))
 		way.type = value;
+	  if(key == "buildingpart:verticalpassage:floorrange")
+		way.range = value ;
 		
       if (key == "shop" && way.shop == null)
         way.shop = value;
