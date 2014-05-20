@@ -24,12 +24,12 @@ api.tagShell = function() {
     boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
             b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
   }
-  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out;';
+  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out skel;';
 };
 
 api.tagBuilding = function(id) {
   return text = '(' +
-          'relation(' + id + ');>>->.rels;>;' +
+          'relation(' + id + ');>>;' +
           ');' +
           'out;';
 };
@@ -52,7 +52,6 @@ api.geosearch = function(latitude, longitude, salle) {
     crossDomain: true,
     success: function(data) {
       var result = api.parseRoom(latitude, longitude, salle, data);
-      console.log(result);
       if (result)
         api.loadBuilding(result.building, result.level, result.room);
     }
@@ -231,7 +230,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
     api.loadLevelPopup(idLevel,idRoom );	  
   }
   else { 
-api.layer.reloadBuilding(true);
+    api.layer.reloadBuilding(true);
   $.ajax({
     url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
     type: 'GET',
@@ -240,8 +239,9 @@ api.layer.reloadBuilding(true);
       //if (map.hasLayer(api.layer.outlines))
         //map.removeLayer(api.layer.outlines);
 		
-      if (api.all_outlines.length == 0)
+ if(typeof api.all_outlines[id] === "undefined" || api.all_outlines[id] == null ){
         api.parseShell(data);
+};
       api.parseBuilding(data);
       api.loadLevelPopup(idLevel,idRoom );	  
       api.layer.reloadBuilding();
@@ -268,7 +268,7 @@ api.loadLevelPopup = function(idLevel, idRoom){
 
 //fonction de conversion de l'id du level en num (0,1 ...)
 api.idToNumLevel = function(idLevel){
-	return api.building.levels[idLevel].level ;
+	return api.building.levelIds[idLevel] ;
 }
 
 
@@ -334,17 +334,19 @@ api.parseShell = function(data) {
   
   api.shells.forEach(function(sid){
     var o = outlines[sid];
-    if (typeof buildingId[o.relationId] != 'undefined') {
-      o.relationId = buildingId[o.relationId];
-      o.name = names[o.relationId];
-    } ;
-
-    if (typeof o.relationId !== 'undefined'){
-    if (typeof api.all_outlines[o.relationId] === 'undefined')
-       api.all_outlines[o.relationId] = new Array() ;
-    api.all_outlines[o.relationId].push(o);
-}
-    o.draw();
+    if (typeof o != 'undefined') {
+      if (typeof buildingId[o.relationId] != 'undefined') {
+        o.relationId = buildingId[o.relationId];
+        o.name = names[o.relationId];
+      } ;
+  
+      if (typeof o.relationId !== 'undefined'){
+        if (typeof api.all_outlines[o.relationId] === 'undefined')
+          api.all_outlines[o.relationId] = new Array() ;
+        api.all_outlines[o.relationId].push(o);
+      }
+      o.draw();
+    }
   });
 }
 
@@ -559,7 +561,7 @@ api.parseBuilding = function(data) {
           shell = $(this).attr("ref");
       });
 
-      api.building = new building.building($(this).attr("id"), name, relations);
+      api.building = new building.building($(this).attr("id"), name, levels);
       api.building.shell = shell;
     }
   });

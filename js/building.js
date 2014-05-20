@@ -51,24 +51,20 @@
     this.id = id;
     this.name = name;
     this.outline = outline;
-    this.levels = levels;
+    this.levels = levels.sort(function(a, b){ return a.level.localeCompare( b.level) } );
     this.shell;
 
     this.levelIds = new Array();
     this.levels.forEach(function(l){
-        this.levelIds.push(l.level);
+        this.levelIds[l.id] = l.level;
     }, this );
-    this.levelIds.sort();
 
   this.currentType = 'All';
 
-  this.getLevelIds = function() {
-     return this.levelIds;
-  }
   this.addNumToString = function(n){
 	return (parseInt(api.building.currentLevel)+n).toString()
   }
-  this.currentLevel = this.getLevelIds()[0];
+  this.currentLevel = this.levels[0].level;
   this.getLevelPerId = function(idRoom){
 	var arr = [] ;
 	api.building.levels.forEach(function(l){
@@ -81,7 +77,7 @@
   }
   /** Return level n **/
   this.getLevel = function(n) {
-    return this.levels.filter(function(l){ return (l.level == n) ; }).pop();
+    return this.levels.filter(function(l){ return ((l.level == n) || (l.id == n)) ; }).pop();
   }
 
   /** Draw level n and write list of rooms **/
@@ -114,15 +110,14 @@
      * Draw level switcher
      */
     this.drawLevelSwitcher = function() {
-      var levels = api.building.getLevelIds();
-
       //add text
       $('#indoor-navigation h3').text(this.name);
       $('#indoor-escape button').attr('title', translate('Close'));
       $('#indoor-list-btn button').attr('title', translate('Show list of rooms'));
 
       var txt = '<div class="btn-group" data-toggle="buttons">';
-      levels.forEach(function(l) {
+      api.building.levels.forEach(function(level) {
+        l = level.level ;
         txt += '<label class="btn" id="indoor-levels-' + l + '" onclick="api.building.drawLevel(' + l + ');"><input type="radio">' + l + '</label>';
       });
       txt += '</div>';
@@ -131,8 +126,8 @@
     
     
     this.updateLevelSwitcher = function(){
-    	api.building.getLevelIds().forEach(function(l) {
-          $('#indoor-levels-'+l).removeClass('active');  
+    	api.building.levels.forEach(function(l) {
+          $('#indoor-levels-'+l.level).removeClass('active');  
 	});	
     	$('#indoor-levels-'+api.building.currentLevel).addClass('active');  	
     }
@@ -141,7 +136,7 @@
     this.popup = function(level_, room_) {
 	  var ok = false; 
 	  var cpt = 0;
-      var level = api.building.levels[level_];
+      var level = api.building.getLevel(level_);
 	  var room;
 	  while(!ok && cpt < level.rooms.length){
 	 
