@@ -8,7 +8,9 @@ api.layer.pins = new L.LayerGroup();        //pin only
 api.room ;
 api.shells = new Array();       //list of outlines
 api.all_outlines = new Array();       //list of outlines
+api.outlines_bounds ;
 api.building;                   //building
+api.buildings = new Array(); 
 
 /**
  * API QUERYS
@@ -23,7 +25,9 @@ api.tagShell = function() {
     var b = map.getBounds();
     boundary = '(' + b.getSouthEast().lat + ',' + b.getNorthWest().lng + ',' +
             b.getNorthWest().lat + ',' + b.getSouthEast().lng + ')';
-  }
+    api.outlines_bounds = map.getBounds();
+  } else
+    api.outlines_bounds = "all" ;
   return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out skel;';
 };
 
@@ -206,17 +210,21 @@ api.loadShell = function() {
   api.layer.removeBuilding(true);
   map.closePopup();
 
-  $.ajax({
-    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()),
-    type: 'GET',
-    crossDomain: true,
-    success: function(data) {
-      api.parseShell(data);
-      map.query.stopAnimation();
-      //$('#map-loading')[0].style.display = 'none';
-    }
-  });
-};
+  if (api.outlines_bounds == "all" || (typeof api.outlines_bounds == "object" && typeof api.outlines_bounds.contains == "function" && api.outlines_bounds.contains(map.getBounds()) )){
+    map.query.stopAnimation();
+  } else {
+    $.ajax({
+      url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()),
+      type: 'GET',
+      crossDomain: true,
+      success: function(data) {
+        api.parseShell(data);
+        map.query.stopAnimation();
+        //$('#map-loading')[0].style.display = 'none';
+      }
+    });
+  }
+}
 
 api.loadBuilding = function(id, idLevel, idRoom) {
   map.query.startAnimation();
@@ -231,40 +239,40 @@ api.loadBuilding = function(id, idLevel, idRoom) {
   }
   else { 
     api.layer.reloadBuilding(true);
-  $.ajax({
-    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
-    type: 'GET',
-    crossDomain: true,
-    success: function(data) {
-      //if (map.hasLayer(api.layer.outlines))
-        //map.removeLayer(api.layer.outlines);
-		
- if(typeof api.all_outlines[id] === "undefined" || api.all_outlines[id] == null ){
-        api.parseShell(data);
-};
-      api.parseBuilding(data);
-      api.loadLevelPopup(idLevel,idRoom );	  
-      api.layer.reloadBuilding();
-      map.query.stopAnimation();
-      $('.leaflet-control-requery').fadeOut('fast');
-      $('.leaflet-control-requery-info').fadeOut('fast');
+    if (typeof api.buildings[id] !== "undefined") {
+      api.building = api.buildings[id];
+      api.building.draw();
+    } else {
+      $.ajax({url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
+              type: 'GET',
+              crossDomain: true,
+              success: function(data) {
+                if(typeof api.all_outlines[id] === "undefined" || api.all_outlines[id] == null )
+                  api.parseShell(data);
+                api.parseBuilding(data);
+                api.loadLevelPopup(idLevel,idRoom );	  
+                api.layer.reloadBuilding();
+                map.query.stopAnimation();
+                $('.leaflet-control-requery').fadeOut('fast');
+                $('.leaflet-control-requery-info').fadeOut('fast');
+              }
+            });
     }
-  });
- }
+  }
 }
 
 api.loadLevelPopup = function(idLevel, idRoom){
-	if(idLevel != null && idRoom != null){
-      	if (map.getZoom() < 18 )
-      		map.setZoom(18);
-      	if (api.building.currentLevel != null && api.idToNumLevel(idLevel) == api.building.currentLevel) 
-      			  	api.building.popup(idLevel,idRoom);
-        else {
-        	api.building.drawLevel(api.idToNumLevel(idLevel));
-        	api.building.popup(idLevel,idRoom);	
-        }	
-      } 
-}
+  if(idLevel != null && idRoom != null){
+    if (map.getZoom() < 18 )
+  	map.setZoom(18);
+      if (api.building.currentLevel != null && api.idToNumLevel(idLevel) == api.building.currentLevel) 
+       	api.building.popup(idLevel,idRoom);
+      else {
+      	api.building.drawLevel(api.idToNumLevel(idLevel));
+       	api.building.popup(idLevel,idRoom);	
+      }	
+    } 
+  }
 
 //fonction de conversion de l'id du level en num (0,1 ...)
 api.idToNumLevel = function(idLevel){
@@ -563,22 +571,13 @@ api.parseBuilding = function(data) {
 
       api.building = new building.building($(this).attr("id"), name, levels);
       api.building.shell = shell;
+      api.buildings[api.building.id] = api.building ;
     }
   });
 
   //finish
   if (api.building != undefined) {
-    api.building.drawLevelSwitcher();
-    if (api.building.drawLevel()) {
-
-
-      //$('#indoor-map').attr({"class": 'span10'});
-      $('#indoor-navigation').show();
-      $('.tools').show();
-
-      //map.invalidateSize();
-      $("#indoor-levels-0").button('toggle');
-    }
+    api.building.draw();
   } else {
     alert("Something went wrong (no building found)!");
     //api.loadShell();

@@ -80,6 +80,14 @@
     return this.levels.filter(function(l){ return ((l.level == n) || (l.id == n)) ; }).pop();
   }
 
+  this.draw = function() {
+    this.drawLevelSwitcher();
+    if (this.drawLevel()) {
+      $('#indoor-navigation').show();
+      $('.tools').show();
+    }
+  };
+
   /** Draw level n and write list of rooms **/
   this.drawLevel = function(n) {
     if (typeof n === 'undefined') { n = this.currentLevel; }
