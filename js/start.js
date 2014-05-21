@@ -15,14 +15,20 @@ layers.osm = new L.tileLayer(
  */
 var map = {};
 $(document).ready(function() {
-    map = L.map('map', {
-        center: [localStorage['indoor-lat'] !== undefined ? localStorage['indoor-lat'] : 50.60986,
-                localStorage['indoor-lng'] !== undefined ? localStorage['indoor-lng'] : 3.13809],
-        zoom: localStorage['indoor-zoom'] !== undefined ? localStorage['indoor-zoom'] : 10,
+  try {
+    storage = window.localStorage ;
+  } catch(e) {
+    storage = Array();
+  }
+
+  map = L.map('map', {
+        center: [storage['indoor-lat'] !== undefined ? storage['indoor-lat'] : 50.60986,
+                storage['indoor-lng'] !== undefined ? storage['indoor-lng'] : 3.13809],
+        zoom: storage['indoor-zoom'] !== undefined ? storage['indoor-zoom'] : 10,
         layers: [layers.osm, api.layer.outlines],
         minZoom: 3,
         attributionControl: true
-    });
+  });
     L.control.scale().addTo(map);
     map.query = L.control.requery();
     map.query.addTo(map);
@@ -34,9 +40,9 @@ $(document).ready(function() {
      * Events
      */
     map.on('moveend', function(e){
-      localStorage['indoor-lat'] = map.getCenter().lat;
-      localStorage['indoor-lng'] = map.getCenter().lng;
-      localStorage['indoor-zoom'] = map.getZoom();
+      storage['indoor-lat'] = map.getCenter().lat;
+      storage['indoor-lng'] = map.getCenter().lng;
+      storage['indoor-zoom'] = map.getZoom();
       api.query();
     });
        
