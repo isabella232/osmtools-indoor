@@ -19,8 +19,10 @@ $(document).ready(function() {
   try {
     storage = window.localStorage ;
   } catch(e) {
-    storage = Array();
+    storage = null;
   }
+  if (typeof storage === "undefined" || storage == null)
+    storage = Array();
 
   map = L.map('map', {
         center: [storage['indoor-lat'] !== undefined ? storage['indoor-lat'] : 50.60986,
