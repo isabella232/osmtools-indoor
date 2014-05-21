@@ -28,10 +28,6 @@
               if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
               if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
             }
-            
-            if (isNaN(zoom) ){     	
-              zoom = 18;
-            }	
             if ( isNaN(lat) || isNaN(lon) ) {
               return false;
             }
