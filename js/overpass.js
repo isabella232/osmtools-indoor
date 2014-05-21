@@ -1,7 +1,8 @@
 var api = {};
 api.layer = {};
 
-api.url = "https://api.openstreetmap.fr/oapi/interpreter?data=" ;
+//api.url = "https://api.openstreetmap.fr/oapi/interpreter?data=" ;
+api.url = "https://overpass-api.de/api/interpreter?data=" ;
 api.layer.building = new L.LayerGroup();
 api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline

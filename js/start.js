@@ -19,7 +19,7 @@ $(document).ready(function() {
         center: [localStorage['indoor-lat'] !== undefined ? localStorage['indoor-lat'] : 50.60986,
                 localStorage['indoor-lng'] !== undefined ? localStorage['indoor-lng'] : 3.13809],
         zoom: localStorage['indoor-zoom'] !== undefined ? localStorage['indoor-zoom'] : 10,
-        layers: [layers.osmfr, api.layer.outlines],
+        layers: [layers.osm, api.layer.outlines],
         minZoom: 3,
         attributionControl: true
     });
