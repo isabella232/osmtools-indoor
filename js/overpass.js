@@ -31,7 +31,7 @@ api.tagShell = function() {
     api.outlines_bounds = map.getBounds();
   } else
     api.outlines_bounds = "all" ;
-  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out skel;';
+  return 'relation["type"="building"]' + boundary + ';relation(r)["type"="level"];way(r:"shell")->.x; (rel(bw.x);rel(br);node(w.x);.x;);out skel qt;';
 };
 
 api.tagBuilding = function(id) {
@@ -51,6 +51,7 @@ api.tagRoom = function(latitude, longitude, salle){
 };
 
 api.geosearch = function(latitude, longitude, salle) {
+  api.loadShell(false);
   if(typeof api.rooms[[latitude, longitude, salle]] !== "undefined"){
     var result = api.rooms[[latitude, longitude, salle]];
     api.loadBuilding(result.building, result.level, result.room);
@@ -207,7 +208,7 @@ api.query = function() {
   }
 };
 
-api.loadShell = function() {
+api.loadShell = function(close) {
   map.query.startAnimation();
   $('.leaflet-control-requery').fadeIn('fast');
   $('.leaflet-control-requery-info').fadeIn('fast');
@@ -228,6 +229,8 @@ api.loadShell = function() {
       success: function(data) {
         api.parseShell(data);
         map.query.stopAnimation();
+        if(close === false)
+          api.reloadBuilding();
         //$('#map-loading')[0].style.display = 'none';
       }
     });
