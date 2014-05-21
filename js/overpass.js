@@ -277,12 +277,8 @@ api.loadLevelPopup = function(idLevel, idRoom){
   if(idLevel != null && idRoom != null){
     if (map.getZoom() < 18 )
   	map.setZoom(18);
-      if (api.building.currentLevel != null && api.idToNumLevel(idLevel) == api.building.currentLevel) 
-       	api.building.popup(idLevel,idRoom);
-      else {
-      	api.building.drawLevel(api.idToNumLevel(idLevel));
-       	api.building.popup(idLevel,idRoom);	
-      }	
+    api.building.drawLevel(api.idToNumLevel(idLevel));
+    api.building.popup(idLevel,idRoom);	
     } 
   }
 
