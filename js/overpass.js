@@ -7,6 +7,7 @@ api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
 api.room ;
+api.rooms = new Array(); 
 api.shells = new Array();       //list of outlines
 api.all_outlines = new Array();       //list of outlines
 api.outlines_bounds ;
@@ -49,19 +50,24 @@ api.tagRoom = function(latitude, longitude, salle){
 };
 
 api.geosearch = function(latitude, longitude, salle) {
-  
-  //Exec Request
-  $.ajax({
-    url: api.url + encodeURIComponent(api.tagRoom(latitude, longitude, salle)),
-    type: 'GET',
-    crossDomain: true,
-    success: function(data) {
-      var result = api.parseRoom(latitude, longitude, salle, data);
-      if (result)
-        api.loadBuilding(result.building, result.level, result.room);
-    }
-  });
-  
+  if(typeof api.rooms[[latitude, longitude, salle]] !== "undefined"){
+    var result = api.rooms[[latitude, longitude, salle]];
+    api.loadBuilding(result.building, result.level, result.room);
+  } else {
+    //Exec Request
+    $.ajax({
+      url: api.url + encodeURIComponent(api.tagRoom(latitude, longitude, salle)),
+      type: 'GET',
+      crossDomain: true,
+      success: function(data) {
+        var result = api.parseRoom(latitude, longitude, salle, data);
+        if (result) {
+          api.rooms[[latitude, longitude, salle]] = result ;
+          api.loadBuilding(result.building, result.level, result.room);
+        }
+      }
+    });
+  }
 };
 api.parseRoom = function(latitude, longitude, salle, data){
   var idbuilding;
