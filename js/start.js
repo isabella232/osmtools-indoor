@@ -3,11 +3,11 @@ var layers = {};
 layers.attrib = ' &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 
 layers.osmfr = new L.tileLayer(
-    'http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+    'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
     { attribution: layers.attrib, maxZoom: 22, maxNativeZoom: 20, opacity:0.5 }); 
 layers.osm = new L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    { attribution: layers.attrib, maxZoom: 18, opacity:0.8 });
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { attribution: layers.attrib, maxZoom: 22,  maxNativeZoom: 18, opacity:0.8 });
 
 /**
  * INIT
