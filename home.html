@@ -141,23 +141,22 @@ function validate_and_submit ()
 
 function getSelectValue(selectId)
 {
-	var selectElmt = document.getElementById(selectId);
-	var textselectionne = selectElmt.options[selectElmt.selectedIndex].text;
-	if(textselectionne.match(/[0-9]+/) != null ){
-		return textselectionne.match(/[0-9]+/)[0];
-	}
+  var selectElmt = document.getElementById(selectId);
+  if (selectElmt != null && selectElmt.selectedIndex != -1) {
+    var selection = selectElmt.options[selectElmt.selectedIndex];
+    if(selection.text.match(/[0-9]+/) != null ){
+      return selection.text.match(/[0-9]+/)[0];
+    }
+  }
+  return "";
 }
 
 function changeUri(){
-    document.getElementById('IndorOsm').src ="index.html#lat=50.6097504&lon=3.1373735&room="+getSelectValue("Selectsalle")+"";
+    document.getElementById('IndoorOsm').src ="index.html#lat=50.6097504&lon=3.1373735&room="+getSelectValue("Selectsalle")+"";
 }
 </script>
 
-
-
-<iframe id="IndorOsm" src="index.html#lat=50.6097504&lon=3.1373735&z=16" width="500" height="555" align="right"></iframe>
-
-
+<iframe id="IndoorOsm" onload="changeUri();" width="500" height="555" align="right"></iframe>
 
 <h2>Editer une réservation</h2>
 

@@ -23,30 +23,25 @@
             }
             var args = hash.split("&");
             for(var i in args) {
-                    if(args[i].search("lat=") != -1) var lat = parseFloat(args[i].substring(4,args[i].length));
-                    if(args[i].search("lon=") != -1) var lon = parseFloat(args[i].substring(4,args[i].length));
-                    if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
-                    if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
-                }
-                
-                /*
-                var zoom = parseInt(args[0], 10),
-                    lat = parseFloat(args[1].substring(4,args[1].length)),
-                    lon = parseFloat(args[2]);
-                */
-                if (isNaN(zoom) ){     	
-                        zoom = 18;
-                 }	
-                if ( isNaN(lat) || isNaN(lon) ) {
-                    return false;
-                }
-                else {
-                    return {
-                        center: new L.LatLng(lat, lon),
-                        zoom: zoom,
-                        room: room 
-                    };
-                }
+              if(args[i].search("lat=") != -1) var lat = parseFloat(args[i].substring(4,args[i].length));
+              if(args[i].search("lon=") != -1) var lon = parseFloat(args[i].substring(4,args[i].length));
+              if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
+              if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
+            }
+            
+            if (isNaN(zoom) ){     	
+              zoom = 18;
+            }	
+            if ( isNaN(lat) || isNaN(lon) ) {
+              return false;
+            }
+            else {
+              return {
+                center: new L.LatLng(lat, lon),
+                zoom: zoom,
+                room: room 
+              };
+            }
         },
     
         formatHash: function(map) {
@@ -113,11 +108,18 @@
                 // console.log("parsed:", parsed.zoom, parsed.center.toString());
                 this.movingMap = true;
                 
-                if(parsed.room != null){
+                if(parsed.room != null && parsed.room != ""){
                 	api.room = parsed.room;
+                	this.map.setView(parsed.center, parsed.zoom);
                 	api.geosearch(parsed.center.lat,parsed.center.lng,parsed.room)
                 }else{
-                	this.map.setView(parsed.center, parsed.zoom);
+                   if (api.room != null) {
+                     map.closePopup();
+                     api.layer.reloadBuilding(true);
+                     api.room = null;
+                   }
+                   
+                   this.map.setView(parsed.center, parsed.zoom);
                 }
                 this.movingMap = false;
                 //alert(parsed.room);
