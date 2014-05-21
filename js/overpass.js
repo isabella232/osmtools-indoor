@@ -229,8 +229,7 @@ api.loadShell = function(close) {
       success: function(data) {
         api.parseShell(data);
         map.query.stopAnimation();
-        if(close === false)
-          api.layer.reloadBuilding();
+        api.layer.reloadBuilding(close);
         //$('#map-loading')[0].style.display = 'none';
       }
     });
