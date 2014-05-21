@@ -1,6 +1,7 @@
 var api = {};
 api.layer = {};
 
+api.url = "https://api.openstreetmap.fr/oapi/interpreter?data=" ;
 api.layer.building = new L.LayerGroup();
 api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
@@ -51,7 +52,7 @@ api.geosearch = function(latitude, longitude, salle) {
   
   //Exec Request
   $.ajax({
-    url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagRoom(latitude, longitude, salle)),
+    url: api.url + encodeURIComponent(api.tagRoom(latitude, longitude, salle)),
     type: 'GET',
     crossDomain: true,
     success: function(data) {
@@ -214,7 +215,7 @@ api.loadShell = function() {
     map.query.stopAnimation();
   } else {
     $.ajax({
-      url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagShell()),
+      url: api.url + encodeURIComponent(api.tagShell()),
       type: 'GET',
       crossDomain: true,
       success: function(data) {
@@ -243,7 +244,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
       api.building = api.buildings[id];
       api.building.draw();
     } else {
-      $.ajax({url: "http://api.openstreetmap.fr/oapi/interpreter?data=" + encodeURIComponent(api.tagBuilding(id)),
+      $.ajax({url: api.url + encodeURIComponent(api.tagBuilding(id)),
               type: 'GET',
               crossDomain: true,
               success: function(data) {
