@@ -278,8 +278,9 @@ api.loadLevelPopup = function(idLevel, idRoom){
   	map.setZoom(18);
     api.building.drawLevel(api.idToNumLevel(idLevel));
     api.building.popup(idLevel,idRoom);	
-    } 
-  }
+    map.query.stopAnimation();
+  } 
+}
 
 //fonction de conversion de l'id du level en num (0,1 ...)
 api.idToNumLevel = function(idLevel){
