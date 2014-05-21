@@ -14,6 +14,7 @@ layers.osm = new L.tileLayer(
  * -----------------------------------------------------------------------------
  */
 var map = {};
+var storage ;
 $(document).ready(function() {
   try {
     storage = window.localStorage ;
