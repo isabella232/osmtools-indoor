@@ -44,7 +44,7 @@ api.tagBuilding = function(id) {
  */
  
 api.tagRoom = function(latitude, longitude, salle){
- return "(way(around:100,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);"+
+ return "(way(around:500,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);"+
 "out body qt;" ;
 };
 
@@ -243,6 +243,7 @@ api.loadBuilding = function(id, idLevel, idRoom) {
     if (typeof api.buildings[id] !== "undefined") {
       api.building = api.buildings[id];
       api.building.draw();
+      api.loadLevelPopup(idLevel,idRoom );	  
     } else {
       $.ajax({url: api.url + encodeURIComponent(api.tagBuilding(id)),
               type: 'GET',
