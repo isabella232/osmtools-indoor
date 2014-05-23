@@ -1,8 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
-  <title>Système de Réservation de Ressources</title>
+  <title>SystÃ¨me de RÃ©servation de Ressources</title>
   <link rel="stylesheet" href="Syst%C3%A8me%20de%20R%C3%A9servation%20de%20Ressources_fichiers/mrbs.css" type="text/css">
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
  </head>
  <body bgcolor="#ffffed" alink="red" text="black" vlink="#5B69A6" link="#5B69A6">
 	   
@@ -14,7 +15,7 @@
         <tbody><tr>
          <td class="banner" bgcolor="#C0E0FF">
           <font size="4"><b>LIFL</b><br>
-           <a href="https://intranet.lifl.fr/SALLES/index.php">Système de Réservation de Ressources</a>
+           <a href="https://intranet.lifl.fr/SALLES/index.php">SystÃ¨me de RÃ©servation de Ressources</a>
           </font>
          </td>
          <td class="banner" bgcolor="#C0E0FF">
@@ -111,7 +112,7 @@ function validate_and_submit ()
 {
   if(document.forms["main"].name.value == "")
   {
-    alert ( "Vous n'avez pas saisi\nla description brève.");
+    alert ( "Vous n'avez pas saisi\nla description brÃ¨ve.");
     return false;
   }
   
@@ -158,16 +159,16 @@ function changeUri(){
 
 <iframe id="IndoorOsm" onload="changeUri();" width="50%" height="555" align="right"></iframe>
 
-<h2>Editer une réservation</h2>
+<h2>Editer une rÃ©servation</h2>
 
 <form name="main" action="edit_entry_handler.php" method="GET">
 
 <table border="0">
 
-<tbody><tr><td class="CR"><b>Brève description :</b></td>
+<tbody><tr><td class="CR"><b>BrÃ¨ve description :</b></td>
   <td class="CL"><input name="name" size="40"></td></tr>
 
-<tr><td class="TR"><b>Description complète:<br>&nbsp;&nbsp;(Nombre de personnes,<br>&nbsp;&nbsp;Interne/Externe etc)</b></td>
+<tr><td class="TR"><b>Description complÃ¨te:<br>&nbsp;&nbsp;(Nombre de personnes,<br>&nbsp;&nbsp;Interne/Externe etc)</b></td>
   <td class="TL"><textarea name="description" rows="8" cols="40" wrap="virtual"></textarea></td></tr>
 
 <tr><td class="CR"><b>Date :</b></td>
@@ -236,16 +237,16 @@ function changeUri(){
   <td class="CL"><input name="hour" size="2" value="12" maxlength="2">:<input name="minute" size="2" value="00" maxlength="2">
 </td></tr>
 
-<tr><td class="CR"><b>Durée :</b></td>
+<tr><td class="CR"><b>DurÃ©e :</b></td>
   <td class="CL"><input name="duration" size="7" value="1">
     <select name="dur_units">
 <option value="minutes">minutes</option><option value="hours" selected="selected">heures</option><option value="days">jours</option><option value="weeks">semaines    </option></select>
-    <input name="all_day" value="yes" type="checkbox"> Journée entière</td></tr>
+    <input name="all_day" value="yes" type="checkbox"> JournÃ©e entiÃ¨re</td></tr>
 
 
 <tr><td class="CR"><b>Salles</b></td>
   <td class="CL" valign="top"><table><tbody><tr><td><select id="Selectsalle" name="rooms[]" multiple="multiple" onchange="changeUri()">
-  <option selected="selected" value="1" >Amphi Turing 118</option><option value="3" >DELATTRE 018</option><option value="2" >Salle 101</option><option value="11" >Salle 211</option><option value="7" >Salle 226</option><option value="15" >Salle 326</option><option value="12" >Salle du conseil + visio 128 </option></select></td><td>CTRL + clic souris pour sélectionner plus d'une salle</td></tr></tbody></table>
+  <option selected="selected" value="1" >Amphi Turing 118</option><option value="3" >DELATTRE 018</option><option value="2" >Salle 101</option><option value="11" >Salle 211</option><option value="7" >Salle 226</option><option value="15" >Salle 326</option><option value="12" >Salle du conseil + visio 128 </option></select></td><td>CTRL + clic souris pour sÃ©lectionner plus d'une salle</td></tr></tbody></table>
     </td></tr>
 
 <tr><td class="CR"><b>Type :</b></td>
@@ -256,20 +257,20 @@ function changeUri(){
 
 
 <tr>
- <td class="CR"><b>Type de périodicité :</b></td>
+ <td class="CR"><b>Type de pÃ©riodicitÃ© :</b></td>
  <td class="CL">
 <input name="rep_type" value="0" checked="checked" type="RADIO">Aucune
 <input name="rep_type" value="1" type="RADIO">Jour
 <input name="rep_type" value="2" type="RADIO">Semaine
 <input name="rep_type" value="3" type="RADIO">Mois
-<input name="rep_type" value="4" type="RADIO">Année
-<input name="rep_type" value="5" type="RADIO">Mois, même jour semaine
+<input name="rep_type" value="4" type="RADIO">AnnÃ©e
+<input name="rep_type" value="5" type="RADIO">Mois, mÃªme jour semaine
 <input name="rep_type" value="6" type="RADIO">tous les n semaines
  </td>
 </tr>
 
 <tr>
- <td class="CR"><b>Date de fin de périodicité :</b></td>
+ <td class="CR"><b>Date de fin de pÃ©riodicitÃ© :</b></td>
  <td class="CL"><select name="rep_end_day">
 <option>1
 </option><option>2
@@ -370,7 +371,7 @@ function changeUri(){
 
 </form>
 
-<p></p><hr><b>Voir la journée:</b>
+<p></p><hr><b>Voir la journÃ©e:</b>
 <a href="https://intranet.lifl.fr/SALLES/day.php?year=2014&amp;month=03&amp;day=13&amp;area=1">13 Mar</a>
  | <a href="https://intranet.lifl.fr/SALLES/day.php?year=2014&amp;month=03&amp;day=14&amp;area=1">14 Mar</a>
  | <a href="https://intranet.lifl.fr/SALLES/day.php?year=2014&amp;month=03&amp;day=15&amp;area=1">15 Mar</a>
