@@ -33,7 +33,7 @@ The URL is updated while browsing, and external updates are passed to the map.
 
 ### How to integrate?
 
-In this repository, there's a `home.html` file, presenting an example of integration. You can check the result at http://clement-lagrange.github.io/osmtools-indoor/#lat=50.60956&lon=3.13786&z=21&room=219 .
+In this repository, there's a `home.html` file, presenting an example of integration. You can check the result at http://clement-lagrange.github.io/osmtools-indoor/home.html .
 
 ### How it works?
 
