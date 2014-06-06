@@ -497,15 +497,15 @@ api.parseBuilding = function(data) {
       });
 
       var coors_o = new Array();
-      var coors_i = new Array();
+      var coors_is = new Array();
       for (var i in outers)
         coors_o = coors_o.concat(outers[i].coords);
       for (var i in inners)
-        coors_i = coors_i.concat(inners[i].coords);
+        coors_is.push(inners[i].coords);
 
       var way = new building.room($(this).attr("id"), coors_o);
       way.category = "Other";
-      way.inner = coors_i;
+      way.inners = coors_is;
 
       $(this).find('tag').each(function() {
         var key = $(this).attr("k").toLowerCase();

@@ -276,8 +276,8 @@
     this.draw = function() {
       var helper = this;
       var coor = this.coords
-      if (this.inner != undefined)
-        coor = [this.coords, this.inner];
+      if (this.inners != undefined)
+        coor = [this.coords].concat(this.inners);
 
       this.polygon = new L.Polygon(coor, {
         smoothFactor: 0.2,
