@@ -396,6 +396,7 @@
     this.color = function() {
       switch (this.type) {
         case 'corridor':
+        case 'hall':
           {
             if (this.access == "private")
               return '#bb9696';
@@ -417,9 +418,7 @@
 
     /** Click or not **/
     this.clickable = function() {
-      if (this.type == 'corridor')
-        return false;
-      if (this.name == null && this.ref == null)
+      if ((this.type == 'corridor') || (this.type == 'hall') || (this.name == null && this.ref == null))
         return false;
       return true;
     }
@@ -427,9 +426,11 @@
     /** Color for room **/
     this.weight = function() {
       switch (this.type) {
+        case 'hall':
         case 'corridor':
           return 1;
         case 'verticalpassage':
+        case 'elevator':
           return 0;
       }
       return 2;
