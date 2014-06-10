@@ -98,10 +98,8 @@
       if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
   	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
       }
-      api.room = null ;
       level.draw();
       map.closePopup();
-	  map.setZoom(map.getZoom());
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
       api.building.updateLevelSwitcher();
@@ -151,9 +149,7 @@
 		if(level.rooms[cpt].ref == room_){
 			ok = true;
 			room = level.rooms[cpt];
-			
 		}
-		api.room = room_ ;
 		cpt++;	
 	  
 	  }
@@ -161,7 +157,7 @@
       map.setView(room.center());
 	  L.popup()
               .setLatLng(room.center(room))
-              .setContent(room.label()) 
+              .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.levels[\''+level_+'\'].rooms['+room_+'].modal();">details</button></div>')
               .openOn(map);
 			  
     };
@@ -180,8 +176,6 @@
     this.shell; //@TODO
     this.coords;
     this.name = "?";
-    
-  
 	
     /** Write list of all room on level **/
     this.list = function() {
@@ -270,7 +264,7 @@
     this.contact = {};
     this.opening_hours;
     this.polygon;
-	
+	this.range ;
 
     /** Draw room **/
     this.draw = function() {
@@ -300,16 +294,28 @@
 	if(this.type == "verticalpassage"){
 		var room = this ;
 		L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: 'img/stairs.png', iconSize:[30,30]})}).addTo(api.layer.decoration).on('click', function() {
-		var content = "";	
-			
-			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(1)) != -1)
-				content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
-			if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(-1)) != -1)
-				content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
-			if(content =="")
-				content= translate('This stairway goes nowhere') ;
+		var content = "";
+		var str = room.range;
+		var patt = new RegExp(/^(-?[0-9]+)\s*(to|-|;)\s*(-?[0-9]+)$/) ;
+			if(str != null){
+				var res = str.match(patt) ;
+				if(parseInt(res[3]) >= (parseInt(api.building.currentLevel)+1)){
+					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
+				}
+				if(parseInt(res[1]) <= (parseInt(api.building.currentLevel)-1)){
+					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
+				}
+				L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
+			}else{
+				if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(1)) != -1)
+					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(1));map.closePopup()">'+translate('Go Up')+'</button>';
+				if(api.building.getLevelPerId(room.id).indexOf(api.building.addNumToString(-1)) != -1)
+					content = content + '<button onclick="api.building.drawLevel(api.building.addNumToString(-1));map.closePopup()">'+translate('Go Down')+'</button>';
+				if(content =="")
+					content= translate('This stairway goes nowhere') ;
 			L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
-		})
+			}	
+		});
 	};
 	if(this.access == "emergency" && this.type == "verticalpassage"){
 		L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/sortie_secours.png', iconSize:[30,30]})}).addTo(api.layer.decoration);
