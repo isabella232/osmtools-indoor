@@ -483,6 +483,8 @@ api.parseBuilding = function(data) {
         way.contact.website = value;
       if (key == "opening_hours")
         way.opening_hours = value;
+      if (key == "capacity")
+        way.capacity = value;
 
     });
     ways[$(this).attr("id")] = way;

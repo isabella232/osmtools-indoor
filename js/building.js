@@ -281,6 +281,7 @@
     this.category;  // fashion,home,health...
     this.shop;      // value of amenity=* or shop=*
     this.access;
+    this.capacity;
     this.contact = {};
     this.opening_hours;
     this.polygon;
@@ -403,9 +404,13 @@
 	  $('#indoor-window-header').html(this.ref);
 
       // Text to be displayed in modal window
-      var window_text = "<h4>Informations :</h4>";
+      var window_text = "<h4>"+translate("Informations")+" :</h4>\n<ul>\n";
+      if(this.capacity != null)
+        window_text += "<li>"+translate("Capacity")+" : "+ this.capacity +"</li>\n" ;
+      if(this.access != null)
+        window_text += "<li>"+translate("Access")+" : "+ this.access +"</li>\n" ;
 
-
+      window_text += "</ul>\n";
       $('#indoor-window-text').html(window_text);
 
 

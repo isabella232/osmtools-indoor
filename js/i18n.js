@@ -10,6 +10,7 @@
 			var language = navigator.language; 
 		}
 		if((typeof translation[token] === 'undefined') || (language.indexOf('en') > -1)){
+                        console.log("No translation found in " + language + " for : "+token);
 			return token;
 		}
 		$.each(translation[token], function(k,v){
@@ -188,7 +189,7 @@
 	 */
     
     'Opening hours' : {
-	  'fr' : 'Horaires Ouvertures',
+	  'fr' : 'Horaires d\'ouverture',
       'it' : 'Orari di apertura',
       'pl' : 'Godziny otwarcia',
     },
