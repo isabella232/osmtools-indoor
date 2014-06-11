@@ -34,16 +34,15 @@
             if ( !( isNaN(lat) || isNaN(lon) ) ) {
               var center = new L.LatLng(lat, lon);
             }
-            else {
-              return {
-                center: center,
-                zoom: zoom,
-                room: room,
-                id_building: id_building,
-                id_level: id_level,
-                id_room: id_room
-              };
-            }
+            return {
+              center: center,
+              zoom: zoom,
+              room: room,
+              id_building: id_building,
+              id_level: id_level,
+              id_room: id_room
+            };
+           
         },
     
         formatHash: function(map) {
