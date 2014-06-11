@@ -149,7 +149,7 @@
     this.getRoom = function(idRoom, idLevel) {
       var ok = false; 
       var levels;
-      if(idLevel == null)
+      if(idLevel == null || idLevel == 'null')
         levels = api.building.levels;
       else
         levels = [api.building.getLevel(idLevel)];
@@ -303,8 +303,8 @@
               .bindLabel(this.label())
               .addTo(api.layer.building)
               .on('click', function() {
-                helper.modal();
-              });
+                api.building.popup(null,this.id);
+              }, this);
 	if (this.label() != null) {
 		L.marker(this.center(),  {clickable: false, icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.decoration);
 	} ;
