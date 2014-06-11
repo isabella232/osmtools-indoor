@@ -27,15 +27,21 @@
               if(args[i].search("lon=") != -1) var lon = parseFloat(args[i].substring(4,args[i].length));
               if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
               if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
+              if(args[i].search("id_room=") != -1) var id_room = parseInt(args[i].substring(8,args[i].length));
+              if(args[i].search("id_level=") != -1) var id_level = parseInt(args[i].substring(9,args[i].length));
+              if(args[i].search("id_building=") != -1) var id_building = parseInt(args[i].substring(12,args[i].length));
             }
-            if ( isNaN(lat) || isNaN(lon) ) {
-              return false;
+            if ( !( isNaN(lat) || isNaN(lon) ) ) {
+              var center = new L.LatLng(lat, lon);
             }
             else {
               return {
-                center: new L.LatLng(lat, lon),
+                center: center,
                 zoom: zoom,
-                room: room 
+                room: room,
+                id_building: id_building,
+                id_level: id_level,
+                id_room: id_room
               };
             }
         },
@@ -44,21 +50,32 @@
           var center = map.getCenter(),
             zoom = map.getZoom(),
             precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+          var txt = "";
           if (api.room != null) 
-            return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom + "&room="+ api.room ; 
-          else
-            return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom;
+            txt = txt + "&room="+ api.room ; 
+          if (api.id['building'] != null) 
+            txt = txt + "&id_building="+ api.id['building'] ; 
+          if (api.id['level'] != null) 
+            txt = txt + "&id_level="+ api.id['level'] ; 
+          if (api.id['room'] != null) 
+            txt = txt + "&id_room="+ api.id['room'] ; 
+          
+          return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom + txt ;
         },
         formatHashOsm: function(map) {
-          var rel = "", way = "",
+          var obj = "",
             center = map.getCenter(),
             zoom = map.getZoom(),
             precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
 
-          if (typeof(api.building) !== "undefined")
-            rel = "relation/" + api.building.id ;
+          if (api.id['room'] != null)
+            obj = "way/" + api.id['room'] ;
+          else if (api.id['level'] != null)
+            obj = "relation/" + api.id['level'] ;
+          else if (api.id['building'] != null)
+            obj = "relation/" + api.id['building'] ;
 
-          return "http://www.openstreetmap.org/"+ rel + way +"#map=" + 
+          return "http://www.openstreetmap.org/"+ obj +"#map=" + 
              [zoom,
                center.lat.toFixed(precision),
                center.lng.toFixed(precision)
@@ -114,8 +131,9 @@
             if (parsed) {
                 // console.log("parsed:", parsed.zoom, parsed.center.toString());
                 this.movingMap = true;
-                
-                if(parsed.room != null && parsed.room != ""){
+                if(parsed.id_building != null && parsed.id_building != "")
+                   api.loadBuilding(parsed.id_building, parsed.id_level, parsed.id_room);
+                else if(parsed.room != null && parsed.room != ""){
                 	api.room = parsed.room;
                 	this.map.setView(parsed.center, parsed.zoom);
                 	api.loadRoom(parsed.center.lat,parsed.center.lng,parsed.room)

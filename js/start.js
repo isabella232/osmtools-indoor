@@ -42,6 +42,11 @@ $(document).ready(function() {
     /*
      * Events
      */
+    map.on('popupclose', function(e){
+      api.room = null;
+      api.id['room'] = null;
+      map.fire('moveend');
+    });
     map.on('moveend', function(e){
       storage['indoor-lat'] = map.getCenter().lat;
       storage['indoor-lng'] = map.getCenter().lng;
@@ -68,7 +73,7 @@ $(document).ready(function() {
     api.query();
     
     $('#indoor-escape').click(function() {
-      api.loadShell();
+      api.loadShell(true);
       $('#indoor-navigation').hide();
     });
     

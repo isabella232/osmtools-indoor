@@ -8,7 +8,7 @@ api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
 api.room ;
-api.id ;
+api.id = {'building': null, 'level': null, 'room': null};
 api.rooms = new Array(); 
 api.shells = new Array();       //list of outlines
 api.all_outlines = new Array();       //list of outlines
@@ -169,9 +169,13 @@ api.layer.reloadBuilding =function(clear) {
 api.layer.removeBuilding = function(clear) {
   if (clear == true) {
       api.room = null;
-      api.id = null;
+      api.id['building'] = null;
+      api.id['level'] = null;
+      api.id['room'] = null;
+      api.building = null;
       api.layer.building.clearLayers();
       api.layer.decoration.clearLayers();
+      map.fire('moveend');
   }
   if (map.hasLayer(api.layer.building)) {
     map.removeLayer(api.layer.building);
@@ -207,8 +211,9 @@ api.query = function() {
       map.removeLayer(api.layer.pins);
       map.addLayer(api.layer.outlines);
       api.layer.reloadBuilding();
-      for (var i in api.building.getLevel(api.building.currentLevel).pois)
-        api.building.getLevel(api.building.currentLevel).pois[i].draw();
+      if(typeof(api.building) !== "undefined" && api.building != null)
+        for (var i in api.building.getLevel(api.building.currentLevel).pois)
+          api.building.getLevel(api.building.currentLevel).pois[i].draw();
     }
   }
 };
@@ -221,7 +226,7 @@ api.loadShell = function(close) {
   //$('#map-zoominfo').css('display', 'none');
 
   map.layer = 1;
-  api.layer.removeBuilding(true);
+  api.layer.removeBuilding(close);
   map.closePopup();
 
   if (api.outlines_bounds == "all" || (typeof api.outlines_bounds == "object" && typeof api.outlines_bounds.contains == "function" && api.outlines_bounds.contains(map.getBounds()) )){
@@ -278,13 +283,14 @@ api.loadBuilding = function(id, idLevel, idRoom) {
 }
 
 api.loadLevelPopup = function(idLevel, idRoom){
+  if(idLevel != null)
+    api.building.drawLevel(api.idToNumLevel(idLevel));
   if(idLevel != null && idRoom != null){
     if (map.getZoom() < 18 )
   	map.setZoom(18);
-    api.building.drawLevel(api.idToNumLevel(idLevel));
     api.building.popup(idLevel,idRoom);	
-    map.query.stopAnimation();
-  } 
+  }
+  map.query.stopAnimation();
 }
 
 //fonction de conversion de l'id du level en num (0,1 ...)

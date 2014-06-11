@@ -81,6 +81,7 @@
   }
 
   this.draw = function() {
+    api.id['building'] = this.id;
     this.drawLevelSwitcher();
     if (this.drawLevel()) {
       $('#indoor-navigation').show();
@@ -96,7 +97,12 @@
       api.layer.building.clearLayers();
       api.layer.decoration.clearLayers();
       if(typeof api.all_outlines[this.id] !== "undefined" && api.all_outlines[this.id] != null ){
-  	api.all_outlines[this.id].forEach(function(o){o.drawInside() ;});
+        var outlines =[];
+  	api.all_outlines[this.id].forEach(function(o){
+          outlines = outlines.concat(o.coords);
+          o.drawInside() ;
+        });
+        map.fitBounds(L.polyline(outlines).getBounds());
       }
       level.draw();
       map.closePopup();
@@ -105,6 +111,7 @@
       api.building.updateLevelSwitcher();
 
       api.layer.reloadBuilding();
+      api.id['level'] = level.id;
       return true;
     }
     alert("Something went wrong (no level " + n + ")!");
@@ -169,6 +176,7 @@
               .setLatLng(room.center(room))
               .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.getRoom(\''+room_+'\', \''+level_+'\').modal();">details</button></div>')
               .openOn(map);
+      api.id['room'] = room.id;
       if (room.ref != null)
         api.room = room.ref;
 			  
