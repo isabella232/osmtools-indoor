@@ -139,30 +139,42 @@
     }
 
     /** Show popup for selected room in the list. Here because of shorter addr. **/
-    this.popup = function(level_, room_) {
-	  var ok = false; 
-	  var cpt = 0;
-      var level = api.building.getLevel(level_);
-	  var room;
-	  while(!ok && cpt < level.rooms.length){
-	 
-		if(level.rooms[cpt].ref == room_){
-			ok = true;
-			room = level.rooms[cpt];
-		}
-		cpt++;	
-	  
+    this.getRoom = function(idRoom, idLevel) {
+      var ok = false; 
+      var levels;
+      if(idLevel == null)
+        levels = api.building.levels;
+      else
+        levels = [api.building.getLevel(idLevel)];
+
+      var room;
+      levels.forEach(function(level) {
+        var cpt = 0;
+        while(!ok && cpt < level.rooms.length){
+          if(level.rooms[cpt].id == idRoom){
+	    ok = true;
+	    room = level.rooms[cpt];
 	  }
+	cpt++;	
+	}
+      });
+      return room;
+    };
       
+    this.popup = function(level_, room_) {
+      var room = this.getRoom(room_, level_);
+
       map.setView(room.center());
 	  L.popup()
               .setLatLng(room.center(room))
-              .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.levels[\''+level_+'\'].rooms['+room_+'].modal();">details</button></div>')
+              .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.getRoom(\''+room_+'\', \''+level_+'\').modal();">details</button></div>')
               .openOn(map);
+      if (room.ref != null)
+        api.room = room.ref;
 			  
     };
 	
-  }
+  };
   
   
   
@@ -225,7 +237,7 @@
       for (var i in tmp)
         if (tmp[i] != null && tmp[i].label() != null)
           if (api.building.currentType == 'All' || tmp[i].category == api.building.currentType)
-            txt += '<div class="indoor-list-room" onclick="api.building.popup(' + this.id + ',\'' + tmp[i].ref + '\')">' + tmp[i].label() + '</div>';
+            txt += '<div class="indoor-list-room" onclick="api.building.popup(\'' + this.id + '\',\'' + tmp[i].id + '\')">' + tmp[i].label() + '</div>';
 			
 		  
 			

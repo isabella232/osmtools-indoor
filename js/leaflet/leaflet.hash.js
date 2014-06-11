@@ -118,7 +118,7 @@
                 if(parsed.room != null && parsed.room != ""){
                 	api.room = parsed.room;
                 	this.map.setView(parsed.center, parsed.zoom);
-                	api.geosearch(parsed.center.lat,parsed.center.lng,parsed.room)
+                	api.loadRoom(parsed.center.lat,parsed.center.lng,parsed.room)
                 }else{
                    if (api.room != null) {
                      map.closePopup();

@@ -8,6 +8,7 @@ api.layer.decoration = new L.LayerGroup();
 api.layer.outlines = new L.LayerGroup();    //full outline
 api.layer.pins = new L.LayerGroup();        //pin only
 api.room ;
+api.id ;
 api.rooms = new Array(); 
 api.shells = new Array();       //list of outlines
 api.all_outlines = new Array();       //list of outlines
@@ -50,7 +51,7 @@ api.tagRoom = function(latitude, longitude, salle){
 "out body qt;" ;
 };
 
-api.geosearch = function(latitude, longitude, salle) {
+api.loadRoom = function(latitude, longitude, salle) {
   api.loadShell(false);
   if(typeof api.rooms[[latitude, longitude, salle]] !== "undefined"){
     var result = api.rooms[[latitude, longitude, salle]];
@@ -101,19 +102,18 @@ api.parseRoom = function(latitude, longitude, salle, data){
 	
 	//Recherche d'indice : la plus petite distance
 	var min=5000;
-	var idmin;
 	for(var j=0; j<distances.length;j++) {
 		if(distances[j]<min){
 			min = distances[j];
-			idmin=lesids[j];
+			idway=lesids[j];
 		}
 	}
-	//lesids(idmin) est l'id du way le plus proche
+	//lesids(idway) est l'id du way le plus proche
 	
 	$(data).find('relation').each(function() {
                 var idtemp = $(this).attr('id');
 		$(this).find('member').each(function() {
-			if($(this).attr('ref') == idmin)
+			if($(this).attr('ref') == idway)
                           idlevel = idtemp ;
 				
 		});
@@ -133,6 +133,9 @@ api.parseRoom = function(latitude, longitude, salle, data){
 	
 	
   }else{
+      $(data).find('way').each(function() {
+        idway = $(this).attr("id");
+      });
       $(data).find('relation').each(function() {
        var id = $(this).attr("id");
        $(this).find('tag').each(function() {
@@ -165,6 +168,8 @@ api.layer.reloadBuilding =function(clear) {
 }
 api.layer.removeBuilding = function(clear) {
   if (clear == true) {
+      api.room = null;
+      api.id = null;
       api.layer.building.clearLayers();
       api.layer.decoration.clearLayers();
   }
