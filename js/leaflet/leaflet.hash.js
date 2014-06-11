@@ -41,19 +41,29 @@
         },
     
         formatHash: function(map) {
-            var center = map.getCenter(),
-                zoom = map.getZoom(),
-                precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
-                if (api.room != null) 
-                	return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom + "&room="+ api.room ;
-                else
-           			return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom;
-            /*    
-                    + [zoom,
-                center.lat.toFixed(precision),
-                center.lng.toFixed(precision)
-            ].join("/");
-             */
+          var center = map.getCenter(),
+            zoom = map.getZoom(),
+            precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+          if (api.room != null) 
+            return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom + "&room="+ api.room ; 
+          else
+            return "#lat=" + center.lat.toFixed(precision) + "&lon=" + center.lng.toFixed(precision) + "&z=" + zoom;
+        },
+        formatHashOsm: function(map) {
+          var rel = "", way = "",
+            center = map.getCenter(),
+            zoom = map.getZoom(),
+            precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+
+          if (typeof(api.building) !== "undefined")
+            rel = "relation/" + api.building.id ;
+
+          return "http://www.openstreetmap.org/"+ rel + way +"#map=" + 
+             [zoom,
+               center.lat.toFixed(precision),
+               center.lng.toFixed(precision)
+             ].join("/");
+             
         },
     
         init: function(map) {
@@ -88,6 +98,7 @@
             var hash = this.formatHash(this.map);
             if (this.lastHash != hash) {
                 location.replace(hash);
+                $("#osm_org")[0].href = this.formatHashOsm(this.map);
                 this.lastHash = hash;
             }
         },
