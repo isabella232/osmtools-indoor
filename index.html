@@ -23,8 +23,8 @@
     <script src="js/jquery/jquery-1.10.2.min.js"></script>
     <script src="js/jquery/jquery.dateFormat-1.0.js"></script>
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
   <body>  
@@ -35,29 +35,27 @@
           <span>/</span>
           <span>sources on <a href="https://github.com/clement-lagrange/osmtools-indoor/">GitHub</a></span>
           <span>/</span>
-          <span>Open this map on <a href="http://openstreetmap.org/" id="osm_org" target="blank">osm.org</a>.<span>
+          <span>Open this map on <a href="http://openstreetmap.org/" id="osm_org" target="blank">osm.org</a>.</span>
         </div>
       </div>
     </div>
-
     <div class="container">
       <div class="tools" id="indoor-navigation">
         <h3></h3>
-        <div id="indoor-escape"><button class="btn"><span class="typcn typcn-backspace"><span><span class="btn-text"></span></button></div>
+        <div id="indoor-escape"><button class="btn"><span class="typcn typcn-backspace"></span><span class="btn-text"></span></button></div>
         <div id="indoor-levels"></div>
-		<div id="indoor-list-btn"><button class="btn" onclick="$('#indoor-list').toggle()"><img src="img/flecheBas.png"/></button></div>
-		
-		<div id="indoor-list" style="display: none">
-			<select class="input-medium" id="indoor-categories" style="display: none">
-				<option value="All" selected><script>document.write(translate('All'));</script></option>
-				<option value="Elevator"><script>document.write(translate('Elevator'));</script></option>
-				<option value="Stairs"><script>document.write(translate('Stairs'));</script></option>
-				<option value="WC"><script>document.write(translate('WC'));</script></option>
-			</select>
-			<div id="indoor-rooms"></div>
-		</div>
-      </div>
+        <div id="indoor-list-btn"><button class="btn" onclick="$('#indoor-list').toggle()"><img src="img/flecheBas.png"/></button></div>
 
+        <div id="indoor-list" style="display: none">
+          <select class="input-medium" id="indoor-categories" style="display: none">
+            <option value="All" selected><script>document.write(translate('All'));</script></option>
+            <option value="Elevator"><script>document.write(translate('Elevator'));</script></option>
+            <option value="Stairs"><script>document.write(translate('Stairs'));</script></option>
+            <option value="WC"><script>document.write(translate('WC'));</script></option>
+          </select>
+          <div id="indoor-rooms"></div>
+        </div>
+      </div>
       <div id="indoor-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="indoor-window" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -69,15 +67,12 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
-      
       <div id="map"></div>
     </div>
     <script src="js/start.js"></script>
     <script src="js/opening_hours.js/opening_hours.js"></script>
-    
     <script src="js/overpass.js"></script>
     <script src="js/bootstrap.min.js"></script>
-	
-    </body>
+  </body>
 </html>
 
