@@ -2,9 +2,7 @@
  * BUILDINGS
  * -----------------------------------------------------------------------------
  */
-
 var building = {};
-
 building.outline = function(coords) {
   //this.id = id;
   this.coords = coords;
@@ -320,17 +318,15 @@ building.room = function(id, coords) {
         if(str != null){
           var patt = new RegExp(/^(-?[0-9]+)\s*(to|-|;)\s*(-?[0-9]+)$/) ;
           var res = str.match(patt) ;
-          if(parseInt(res[3]) >= (parseInt(api.building.currentLevel)+1)){
-            content += makeButton(1);
-          }
-          if(parseInt(res[1]) <= (parseInt(api.building.currentLevel)-1)){
+          if(parseInt(res[1]) <= (parseInt(api.building.currentLevel)-1))
             content += makeButton(-1);
-          }
-        }else{
-          if(api.building.getLevelPerId(room.id).indexOf(addNumToString(1)) != -1)
+          if(parseInt(res[3]) >= (parseInt(api.building.currentLevel)+1))
             content += makeButton(1);
+        }else{
           if(api.building.getLevelPerId(room.id).indexOf(addNumToString(-1)) != -1)
             content += makeButton(-1);
+          if(api.building.getLevelPerId(room.id).indexOf(addNumToString(1)) != -1)
+            content += makeButton(1);
         }	
         if(content =="")
           content= translate('This stairway goes nowhere') ;
