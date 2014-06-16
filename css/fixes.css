@@ -10,9 +10,9 @@ body {
   font-family: 'typicons';
   src: url('font/typicons.eot');
   src: url('font/typicons.eot?#iefix') format('embedded-opentype'),
-       url('font/typicons.woff') format('woff'),
-       url('font/typicons.ttf') format('truetype'),
-       url('font/typicons.svg#typicons') format('svg');
+  url('font/typicons.woff') format('woff'),
+  url('font/typicons.ttf') format('truetype'),
+  url('font/typicons.svg#typicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -56,20 +56,20 @@ body > .container {
 
 /******************************************************************************/
 #map-zoominfo {
-    position: fixed;
-    width: 300px;
-    top: 45px;
-    left: 50%;
-    margin-left: -150px;
+  position: fixed;
+  width: 300px;
+  top: 45px;
+  left: 50%;
+  margin-left: -150px;
 }
 
 #map-loading {
-    display: block;
-    margin-left: 23px;
-    margin-top: -43px;
-    width: 35px;
-    height: 37px;
-    padding-top: 7px;
+  display: block;
+  margin-left: 23px;
+  margin-top: -43px;
+  width: 35px;
+  height: 37px;
+  padding-top: 7px;
 }
 
 /** Leaflet fixes **/
@@ -119,88 +119,97 @@ body > .container {
 }
 
 /*
-* List
-*/
+ * List
+ */
 #indoor-navigation {
-    display: none;
+  display: none;
 }
 
 #indoor-categories {
-   margin-top: 5px; 
+  margin-top: 5px; 
+}
+
+#indoor-levels {
+  float: left;
 }
 
 #indoor-escape {
   float: right;
 }
 
-#indoor-rooms {
-    overflow: auto;
-    margin-top: 10px;
-    height: 420px;
+#indoor-list-btn {
+  float: right;
+}
+
+#indoor-list {
+  overflow: auto;
+  float: left;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .indoor-list-room {
-    margin: 2px 0;
-    font-size: 85%;
+  margin: 2px 0;
+  font-size: 85%;
 }
 
 .indoor-list-room:hover{
-    background: #eee;
-    cursor: pointer;
-    cursor: hand;
+  background: #eee;
+  cursor: pointer;
+  cursor: hand;
 }
 
 /*
-* Opening hours list
-*/
+ * Opening hours list
+ */
 
 .opening_hours-datelist .closed {    
-    color: red;
-    padding-left: 15px;
+  color: red;
+  padding-left: 15px;
 }
 
 .opening_hours-datelist .open {    
-    color: green;
-    padding-left: 15px;
+  color: green;
+  padding-left: 15px;
 }
 
 /*
-* List - webkit scrollbar
-*/
+ * List - webkit scrollbar
+ */
 #indoor-rooms::-webkit-scrollbar {
-    height: 10px;
-    width: 10px;
+  height: 10px;
+  width: 10px;
 }
 #indoor-rooms::-webkit-scrollbar-track {
-    background: #FFFFFF;
+  background: #FFFFFF;
 }
 #indoor-rooms::-webkit-scrollbar-thumb {
-    min-height: 30px;
-    background: #DEDEDE;
+  min-height: 30px;
+  background: #DEDEDE;
 }
 #indoor-rooms::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
+  background: #bbb;
 }
 #indoor-rooms::-webkit-scrollbar-thumb:active {
-    background: #bbb;
+  background: #bbb;
 }
 
 /*
-* Misc
-*/
+ * Misc
+ */
 
 hr {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 .brand span {
-    position: relative;
-    top: 5px;
-    padding-left: 5px;
+  position: relative;
+  top: 5px;
+  padding-left: 5px;
 }
 
 .dropdown-menu {
-    z-index: 1010;
+  z-index: 1010;
 }
 
 .tools {
@@ -209,14 +218,14 @@ hr {
   z-index: 10;
   top: 60px;
   right: 20px;
-  
+
   background: #fafafa;
   max-height: calc(100% - 140px);
   height: /*31px;*/ auto;
   width: 300px;
   padding: 5px 10px;
   overflow: auto;
-  
+
   border-radius: 2px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3),0 -3px 8px rgba(0,0,0,0.2);
 }
