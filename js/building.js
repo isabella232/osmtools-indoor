@@ -171,6 +171,7 @@ building.building = function(id, name, levels, outline) {
     if (!map.hasLayer(api.layer.decoration))
       room.lab.addTo(api.layer.building);   
     room.lab.showLabel();
+    room.lab.flash();
     api.id['room'] = room.id;
     if (room.ref != null)
       api.room = room.ref;
@@ -297,7 +298,14 @@ building.room = function(id, coords) {
 
       this.lab.label.on('click', function() {
         api.building.getRoom(this.id, null).modal();
-      }, this)
+      }, this);
+      this.lab.flash = function(){
+        var lab = this.getLabel();
+        lab.setContent(lab._content.replace(/black/, "red"));
+        setTimeout(function(){
+          lab.setContent(lab._previousContent);
+        }, 1000);
+      };
     } ;
     if(this.shop == "toilets"){
       L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.decoration);
