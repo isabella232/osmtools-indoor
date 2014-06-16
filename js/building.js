@@ -291,7 +291,7 @@ building.room = function(id, coords) {
     }, this);
     if (this.label() != null) {
       this.lab = L.marker(this.center(), {icon: L.divIcon({className: 'null', iconSize: null})})
-      .bindLabel('<span style="color:black">'+this.label(false)+'</span>', {noHide: true, clickable: true})
+      .bindLabel('<span style="color:black" title="'+translate('Click to get more informations...')+'">'+this.label(false)+'</span>', {noHide: true, clickable: true})
       .addTo(api.layer.decoration)
       .showLabel() ;
 

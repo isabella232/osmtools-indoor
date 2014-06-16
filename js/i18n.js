@@ -36,7 +36,16 @@ var translation = {
     'it': 'Scendere',
     'pl': 'Spadać'
   },
-  'Info' :{
+  'Show list of rooms': {
+     'fr': 'Montrer la liste des salles'
+  },
+  'Click to get more informations...': {
+    'fr': 'Cliquez pour plus  d\'informations...'
+  },
+  'Capacity': {
+    'fr': 'Capacité'
+  },
+  'Informations' :{
     'fr': 'Informations',
     'it': 'Informazioni',
     'pl': 'Informacje'
