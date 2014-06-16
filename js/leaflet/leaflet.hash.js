@@ -22,12 +22,12 @@
 			var args = hash.split("&");
 			for(var i in args) {
 				if(args[i].search("lat=") != -1) var lat = parseFloat(args[i].substring(4,args[i].length));
-				if(args[i].search("lon=") != -1) var lon = parseFloat(args[i].substring(4,args[i].length));
-				if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
-				if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
-				if(args[i].search("id_room=") != -1) var id_room = parseInt(args[i].substring(8,args[i].length));
-				if(args[i].search("id_level=") != -1) var id_level = parseInt(args[i].substring(9,args[i].length));
-				if(args[i].search("id_building=") != -1) var id_building = parseInt(args[i].substring(12,args[i].length));
+        else if(args[i].search("lon=") != -1) var lon = parseFloat(args[i].substring(4,args[i].length));
+				else if(args[i].search("z=") != -1) var zoom = parseInt(args[i].substring(2,args[i].length));
+				else if(args[i].search("id_room=") != -1) var id_room = parseInt(args[i].substring(8,args[i].length));
+				else if(args[i].search("id_level=") != -1) var id_level = parseInt(args[i].substring(9,args[i].length));
+				else if(args[i].search("id_building=") != -1) var id_building = parseInt(args[i].substring(12,args[i].length));
+				else if(args[i].search("room=") != -1) var room = args[i].substring(5,args[i].length);
 			}
 			if ( !( isNaN(lat) || isNaN(lon) ) ) {
 				var center = new L.LatLng(lat, lon);
@@ -124,19 +124,20 @@
 			if (parsed) {
 				// console.log("parsed:", parsed.zoom, parsed.center.toString());
 				this.movingMap = true;
-				if(parsed.id_building != null && parsed.id_building != "")
-					api.loadBuilding(parsed.id_building, parsed.id_level, parsed.id_room);
-				else if(parsed.room != null && parsed.room != ""){
+				if(parsed.room != null && parsed.room != ""){
 					api.room = parsed.room;
 					this.map.setView(parsed.center, parsed.zoom);
 					api.loadRoom(parsed.center.lat,parsed.center.lng,parsed.room)
-				}else{
+				}else if(parsed.id_building != null && parsed.id_building != "")
+					api.loadBuilding(parsed.id_building, parsed.id_level, parsed.id_room);
+				else{
 					if (api.room != null) {
-						this.map.closePopup();
+						api.building.closePopup();
 						api.layer.reloadBuilding(true);
 						api.room = null;
 					}
-					this.map.setView(parsed.center, parsed.zoom);
+					if(parsed.center != null && parsed.zoom != null)
+            this.map.setView(parsed.center, parsed.zoom);
 				}
 				this.movingMap = false;
 				//alert(parsed.room);

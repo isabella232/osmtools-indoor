@@ -208,7 +208,8 @@ api.loadShell = function(close) {
 
 	map.layer = 1;
 	api.layer.removeBuilding(close);
-	map.closePopup();
+  if (typeof api.building !== "undefined")
+    api.building.closePopup();
 
 	if (api.outlines_bounds == "all" || (typeof api.outlines_bounds == "object" && typeof api.outlines_bounds.contains == "function" && api.outlines_bounds.contains(map.getBounds()) )){
 		map.query.stopAnimation();

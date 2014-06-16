@@ -8,10 +8,11 @@ building.outline = function(coords) {
   this.coords = coords;
   this.relationId;
   this.name;
+  this.polygon;
 
   /** Draw outline with popup "Enter..." **/
   this.draw = function() {
-    new L.Polygon(this.coords)
+    this.polygon = new L.Polygon(this.coords)
     .addTo(api.layer.outlines)
     .on('click', function() {
       api.loadBuilding(this.relationId, this);
@@ -31,12 +32,7 @@ building.outline = function(coords) {
 
   /** Center of outline **/
   this.center = function() {
-    var sumLat = 0, sumLon = 0;
-    for (var i in this.coords) {
-      sumLat += this.coords[i].lat;
-      sumLon += this.coords[i].lng;
-    }
-    return new L.LatLng(sumLat / this.coords.length, sumLon / this.coords.length);
+    return this.polygon.getBounds().getCenter();
   }
 }
 
@@ -97,7 +93,7 @@ building.building = function(id, name, levels, outline) {
           map.fitBounds(bounds);
       }
       level.draw();
-      map.closePopup();
+      api.building.closePopup();
       $('#indoor-rooms').html(level.list());
       api.building.currentLevel = n;
       api.building.updateLevelSwitcher();
@@ -160,14 +156,21 @@ building.building = function(id, name, levels, outline) {
     return room;
   };
 
+  this.closePopup = function() {
+    if (!map.hasLayer(api.layer.decoration))
+      if (api.id['room'] != null)
+        api.layer.building.removeLayer(this.getRoom(api.id['room'], null).lab.hideLabel());
+    api.room = null;
+    api.id['room'] = null;
+  };
   this.popup = function(level_, room_) {
-    var room = this.getRoom(room_, level_);
+    this.closePopup(); 
 
+    var room = this.getRoom(room_, level_);
     map.setView(room.center());
-    L.popup()
-    .setLatLng(room.center(room))
-    .setContent(room.label()  +'<br><div><button class="btn btn-mini btn-success" id="building-open" onclick="api.building.getRoom(\''+room_+'\', \''+level_+'\').modal();">details</button></div>')
-    .openOn(map);
+    if (!map.hasLayer(api.layer.decoration))
+      room.lab.addTo(api.layer.building);   
+    room.lab.showLabel();
     api.id['room'] = room.id;
     if (room.ref != null)
       api.room = room.ref;
@@ -265,6 +268,7 @@ building.room = function(id, coords) {
   this.verticalpassage;
   this.polygon;
   this.range ;
+  this.lab;
 
   /** Draw room **/
   this.draw = function() {
@@ -280,15 +284,20 @@ building.room = function(id, coords) {
       color: this.color(),
       fillOpacity: 0.4
     })
-    .bindLabel(this.label())
+//    .bindLabel(this.label())
     .addTo(api.layer.building)
     .on('click', function() {
       api.building.popup(null,this.id);
     }, this);
     if (this.label() != null) {
-      L.marker(this.center(),  {icon: L.divIcon({className: 'null', html: '<span style="color:black">'+this.label(false)+'</span>'}) }).addTo(api.layer.decoration).on('click', function() {
-        api.building.popup(null,this.id);
-      }, this);;
+      this.lab = L.marker(this.center(), {icon: L.divIcon({className: 'null', iconSize: null})})
+      .bindLabel('<span style="color:black">'+this.label(false)+'</span>', {noHide: true, clickable: true})
+      .addTo(api.layer.decoration)
+      .showLabel() ;
+
+      this.lab.label.on('click', function() {
+        api.building.getRoom(this.id, null).modal();
+      }, this)
     } ;
     if(this.shop == "toilets"){
       L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.decoration);
@@ -449,12 +458,15 @@ building.room = function(id, coords) {
 
   /** Center of room outline **/
   this.center = function() {
+    return this.polygon.getBounds().getCenter()
+    /*
     var sumLat = 0, sumLon = 0;
     for (var i in this.coords) {
       sumLat += this.coords[i].lat;
       sumLon += this.coords[i].lng;
     }
     return new L.LatLng(sumLat / this.coords.length, sumLon / this.coords.length);
+   */
   }
 }
 

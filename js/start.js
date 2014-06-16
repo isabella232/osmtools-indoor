@@ -40,11 +40,6 @@ $(document).ready(function() {
   /*
    * Events
    */
-  map.on('popupclose', function(e){
-    api.room = null;
-    api.id['room'] = null;
-    map.fire('moveend');
-  });
   map.on('moveend', function(e){
     storage['indoor-lat'] = map.getCenter().lat;
     storage['indoor-lng'] = map.getCenter().lng;
