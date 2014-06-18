@@ -89,7 +89,7 @@ building.building = function(id, name, levels, outline) {
           o.drawInside() ;
         });
         var bounds = L.polyline(outlines).getBounds();
-        if(!bounds.intersects(map.getBounds()))
+        if((map.getZoom() < 18) || !bounds.intersects(map.getBounds()))
           map.fitBounds(bounds);
       }
       level.draw();
