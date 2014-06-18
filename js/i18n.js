@@ -26,6 +26,9 @@ var translation = {
     'it': 'Questa scala va da nessuna parte',
     'pl': 'To idzie donikąd schody'
   },
+  'Locate' :{
+    'fr': 'Localiser',
+  },
   'Go Up' :{
     'fr': 'Monter',
     'it': 'Salire',

@@ -37,6 +37,8 @@ $(document).ready(function() {
   map.query.addTo(map);
 
   new L.Hash(map);
+
+  map.addControl(new L.Control.OSMGeocoder({position: 'topleft', text: translate('Locate')})) ;
   /*
    * Events
    */
