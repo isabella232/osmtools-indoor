@@ -157,9 +157,12 @@ building.building = function(id, name, levels, outline) {
   };
 
   this.closePopup = function() {
-    if (!map.hasLayer(api.layer.decoration))
-      if (api.id['room'] != null)
+    if (api.id['room'] != null){
+      if (!map.hasLayer(api.layer.decoration))
         api.layer.building.removeLayer(this.getRoom(api.id['room'], null).lab.hideLabel());
+      else
+        this.getRoom(api.id['room'], null).lab.unflash();
+    }
     api.room = null;
     api.id['room'] = null;
   };
@@ -299,12 +302,13 @@ building.room = function(id, coords) {
       this.lab.label.on('click', function() {
         api.building.getRoom(this.id, null).modal();
       }, this);
+      this.lab.unflash = function(){
+        var label = this.getLabel();
+        label.setContent(label._content.replace(/red/, "black"));
+      };
       this.lab.flash = function(){
-        var lab = this.getLabel();
-        lab.setContent(lab._content.replace(/black/, "red"));
-        setTimeout(function(){
-          lab.setContent(lab._previousContent);
-        }, 1000);
+        var label = this.getLabel();
+        label.setContent(label._content.replace(/black/, "red"));
       };
     } ;
     if(this.shop == "toilets"){
