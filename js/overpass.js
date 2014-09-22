@@ -407,7 +407,7 @@ api.parseBuilding = function(data) {
 				way.ref = value;
 			//(way.name === undefined) ? way.name = '['+value+']' : way.name = '['+value+'] '+way.name;
 
-			if (key == "buildingpart")
+			if (key == "buildingpart" || key == "room")
 				way.type = value;
 
 			if (key == "shop" && value.match(/(bag|boutique|clothes|cosmetics|jewelry|perfumery|shoes)/))
@@ -429,16 +429,18 @@ api.parseBuilding = function(data) {
 			if ((key == "amenity" && value.match(/(arts_centre|cinema|theatre)/)) || (key == "leisure" && value.match(/(sports_centre)/)))
 				way.category = "Entertainment";
 
-			// if(key =="amenity" && value.match(/(toilets)/))
-			// way.category = "WC" ;
+			if((key =="amenity" || key =="room") && value.match(/(toilets)/))
+				way.category = "WC";
+
 			// if(key =="buildingpart" && value.match(/(verticalpassage)/))
 			// way.category = "Stairs" ;
 
-			if(key =="buildingpart:verticalpassage")
+			/* Supports buildingpart:verticalpassage=stairs & highway=stairway */
+			if(key =="buildingpart:verticalpassage" || key =="highway")
 				way.verticalpassage = value;
+				way.type = value;
 			if(key == "buildingpart:verticalpassage:floorrange")
 				way.range = value ;
-
 
 			if (key == "shop" && way.shop == null)
 				way.shop = value;
@@ -505,7 +507,7 @@ api.parseBuilding = function(data) {
 			$(this).find('tag').each(function() {
 				var key = $(this).attr("k").toLowerCase();
 				var value = $(this).attr("v");
-				if (key == "buildingpart")
+				if (key == "buildingpart" || key == "room" || key == "highway")
 					way.type = value;
 			});
 
@@ -530,9 +532,9 @@ api.parseBuilding = function(data) {
 			var rooms = new Array();
 			var pois = new Array();
 			$(this).find('member').each(function() {
-				if ($(this).attr("type") == "way" && $(this).attr("role") == "buildingpart")
+				if ($(this).attr("type") == "way" && ($(this).attr("role") == "buildingpart" || $(this).attr("role") == "building:part"))
 					rooms.push(ways[$(this).attr("ref")]);
-				if ($(this).attr("type") == "relation" && $(this).attr("role") == "buildingpart")
+				if ($(this).attr("type") == "relation" && ($(this).attr("role") == "buildingpart" || $(this).attr("role") == "building:part"))
 					rooms.push(ways_rel[$(this).attr("ref")]);
 				if ($(this).attr("type") == "node" && $(this).attr("role") == "poi") {
 					var ref = $(this).attr("ref");

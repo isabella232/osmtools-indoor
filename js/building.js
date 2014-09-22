@@ -311,14 +311,20 @@ building.room = function(id, coords) {
         label.setContent(label._content.replace(/black/, "red"));
       };
     } ;
-    if(this.shop == "toilets"){
-      L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: 'img/toilets.png', iconSize:[20,20]})}).addTo(api.layer.decoration);
+    if(this.shop == "toilets" || this.type == "toilets"){
+		var icon;
+		if(this.access == "men" || this.men == "yes")
+			icon = 'img/man.png'
+		else if(this.access == "women" || this.women == "yes")
+			icon = 'img/woman.png'
+		else icon = 'img/unisex.png'
+      L.marker(this.center(), {clickable:false, icon: L.icon({iconUrl: icon, iconSize:[20,20]})}).addTo(api.layer.decoration);
     };
-    if(this.type == "verticalpassage"){
+    if(this.type == "verticalpassage" || this.type == "stairway" || this.type == "elevator"){
       var room = this ;
-      var icon = 'img/stairs.png';
-      if(this.verticalpassage == "elevator") 
-        icon = 'img/elevator.png';
+      var icon = 'img/stairs2.png';
+      if(this.verticalpassage == "elevator" || this.type == "elevator")
+        icon = 'img/elevator2.png';
       if(this.access == "emergency")
         icon = 'img/sortie_secours.png';
       L.marker(this.center(), {clickable:true, icon: L.icon({iconUrl: icon, iconSize:[30,30]})}).addTo(api.layer.decoration).on('click', function() {

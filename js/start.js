@@ -25,9 +25,9 @@ $(document).ready(function() {
     storage = Array();
 
   map = L.map('map', {
-    center: [storage['indoor-lat'] !== undefined ? storage['indoor-lat'] : 50.60986,
-      storage['indoor-lng'] !== undefined ? storage['indoor-lng'] : 3.13809],
-      zoom: storage['indoor-zoom'] !== undefined ? storage['indoor-zoom'] : 10,
+    center: [storage['indoor-lat'] !== undefined ? storage['indoor-lat'] : 49.41552,
+      storage['indoor-lng'] !== undefined ? storage['indoor-lng'] : 2.81856],
+      zoom: storage['indoor-zoom'] !== undefined ? storage['indoor-zoom'] : 18,
       layers: [layers.osm, api.layer.outlines],
       minZoom: 3,
       attributionControl: true
