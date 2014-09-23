@@ -1,12 +1,12 @@
 var layers = {};
 layers.attrib = ' &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 layers.osmfr = new L.tileLayer(
-  'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-  { attribution: layers.attrib, maxZoom: 22, maxNativeZoom: 20, opacity:0.5 }
-); 
+  'http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+  { attribution: layers.attrib, maxZoom: 22, maxNativeZoom: 20, opacity:0.8 }
+);
 layers.osm = new L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  { attribution: layers.attrib, maxZoom: 22,  maxNativeZoom: 18, opacity:0.8 }
+  { attribution: layers.attrib, maxZoom: 22,  maxNativeZoom: 20, opacity:0.8 }
 );
 
 /**
@@ -28,8 +28,8 @@ $(document).ready(function() {
     center: [storage['indoor-lat'] !== undefined ? storage['indoor-lat'] : 49.41552,
       storage['indoor-lng'] !== undefined ? storage['indoor-lng'] : 2.81856],
       zoom: storage['indoor-zoom'] !== undefined ? storage['indoor-zoom'] : 18,
-      layers: [layers.osm, api.layer.outlines],
-      minZoom: 3,
+      layers: [layers.osmfr, api.layer.outlines],
+      minZoom: 14, //Avoid loading objects from whole wolrd
       attributionControl: true
   });
   L.control.scale().addTo(map);
@@ -76,7 +76,7 @@ $(document).ready(function() {
   /**
    * ONCLICK
    * -----------------------------------------------------------------------------
-   */   
+   */
   $("#indoor-categories").change(function() {
     api.building.currentType = $(this).children(":selected").attr("value");
     api.building.drawLevel(api.building.currentLevel);
