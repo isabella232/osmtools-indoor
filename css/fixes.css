@@ -126,7 +126,7 @@ body > .container {
 }
 
 #indoor-categories {
-  margin-top: 5px; 
+  margin-top: 5px;
 }
 
 #indoor-levels {
@@ -163,12 +163,12 @@ body > .container {
  * Opening hours list
  */
 
-.opening_hours-datelist .closed {    
+.opening_hours-datelist .closed {
   color: red;
   padding-left: 15px;
 }
 
-.opening_hours-datelist .open {    
+.opening_hours-datelist .open {
   color: green;
   padding-left: 15px;
 }
@@ -221,8 +221,8 @@ hr {
 
   background: #fafafa;
   max-height: calc(100% - 140px);
-  height: /*31px;*/ auto;
-  width: 300px;
+  height: auto;
+  width: 25%;
   padding: 5px 10px;
   overflow: auto;
 
@@ -234,7 +234,6 @@ hr {
   font-size: 22px;
   font-family: 'Oxygen', sans-serif;
   margin-top: 5px;
-  width: calc(100% - 50px);
   float: left;
 }
 

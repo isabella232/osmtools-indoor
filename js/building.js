@@ -128,14 +128,14 @@ building.building = function(id, name, levels, outline) {
 
   this.updateLevelSwitcher = function(){
     api.building.levels.forEach(function(l) {
-      $('#indoor-levels-'+l.level).removeClass('active');  
-    });	
-    $('#indoor-levels-'+api.building.currentLevel).addClass('active');  	
+      $('#indoor-levels-'+l.level).removeClass('active');
+    });
+    $('#indoor-levels-'+api.building.currentLevel).addClass('active');
   }
 
   /** Show popup for selected room in the list. Here because of shorter addr. **/
   this.getRoom = function(idRoom, idLevel) {
-    var ok = false; 
+    var ok = false;
     var levels;
     if(idLevel == null || idLevel == 'null')
       levels = api.building.levels;
@@ -150,7 +150,7 @@ building.building = function(id, name, levels, outline) {
           ok = true;
           room = level.rooms[cpt];
         }
-        cpt++;	
+        cpt++;
       }
     });
     return room;
@@ -167,12 +167,12 @@ building.building = function(id, name, levels, outline) {
     api.id['room'] = null;
   };
   this.popup = function(level_, room_) {
-    this.closePopup(); 
+    this.closePopup();
 
     var room = this.getRoom(room_, level_);
     map.setView(room.center());
     if (!map.hasLayer(api.layer.decoration))
-      room.lab.addTo(api.layer.building);   
+      room.lab.addTo(api.layer.building);
     room.lab.showLabel();
     room.lab.flash();
     api.id['room'] = room.id;
@@ -354,7 +354,7 @@ building.room = function(id, coords) {
             content += makeButton(-1);
           if(api.building.getLevelPerId(room.id).indexOf(addNumToString(1)) != -1)
             content += makeButton(1);
-        }	
+        }
         if(content =="")
           content= translate('This stairway goes nowhere') ;
         L.popup().setLatLng(room.center(room)).setContent(content).openOn(map);
@@ -441,8 +441,12 @@ building.room = function(id, coords) {
           return '#bb9696';
         return '#FCFAE1';
       }
+      case 'stairway':
+      case 'elevator':
       case 'verticalpassage':
-        return '#5C0515';
+        return '#f6a932';
+      case 'toilets':
+        return '#4ece5d';
       case 'room':
         {
         if (this.access == "private")
@@ -450,8 +454,13 @@ building.room = function(id, coords) {
         else
           return '#B9121B';
       }
+      case 'class':
+        return '#B9121B';
+      case 'amphitheatre':
+        return '#30bee7';
+
     }
-    return '#aaa';
+    return '#7d8eab';
   }
 
   /** Click or not **/
@@ -570,4 +579,3 @@ building.poi = function(id, coords, type, name) {
     $('#indoor-window').modal();
   }
 }
-
