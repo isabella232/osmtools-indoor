@@ -4,24 +4,24 @@ A javascript application to display rooms in a building.
 
 ### Status
 
-This a fork from [yarl/osmtools-indoor](https://github.com/yarl/osmtools-indoor) in order to simplify and expand it.
+This a fork from [clement-lagrange/osmtools-indoor](https://github.com/clement-lagrange/osmtools-indoor) in order to expand it specifically for education buildings representation.
 
 The main objective is to have a self-contained, client application to display building's insides from OpenStreetMap.
 
-This is curently being worked on by students on behalf of [LIFL](http://www.lifl.fr), which should use this application for its buildings soon.
-
+This version is not optimized and would need a code refactoring. You are welcome if you wish to participate or send a pull request.
 ### Advantages
 
-- no PHP, all client-logic
-- vertical_passage support
-- simpler navigation
-- better zoom support
-- open room from URL
-- render "not too bad" on mobile devices
-- stairs are clickable
-- etc.
+1. Supports another OSM data representation :
+ * In level relations, room or other building parts can use the role `building:part` instead of `buildingpart`.
+ * Ways representing rooms can be tagged as `room=yes`, `room=amphitheatre` or `room=class` instead of using the tag `buildingpart=room`.
+ * Vertical passage elements  such as stairs and elevators can be tagged using more standard OSM representation : `highway=stairway` and `highway=elevator`.
+2. New colors to display different types of rooms
+3. Toilets will display a different icon for men and women depend on the tag `access=men|women`
+4. New public domain icons from [the Noun Project](http://thenounproject.com/)
 
 ### How to use?
+
+The main instance is available at [antoine-g.github.io/osmtools-indoor/](http://antoine-g.github.io/osmtools-indoor/).
 
 The "hash" URL syntax is supported, so you can use something like `#lat=50.6201&lon=3.5596&z=11`, to display the map at a specific center and zoom.
 
@@ -31,16 +31,12 @@ For example, check http://clement-lagrange.github.io/osmtools-indoor/#lat=50.609
 
 The URL is updated while browsing, and external updates are passed to the map.
 
-### How to integrate?
-
-In this repository, there's a `home.html` file, presenting an example of integration. You can check the result at http://clement-lagrange.github.io/osmtools-indoor/home.html .
-
 ### How it works?
 
 Displayed data are taken 'live' from OSM database is using [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API). It's working worldwide.
 
 It uses [Leaflet](http://leafletjs.com/), an excellent map display library, quite a lot.
- 
+
 ### How to map a building?
 
 In order to render building outline on the map, relation of building should have a way (role `outer`) with tags building=`yes` and `level=0`. The relation itself should have tag `type=building` and contain subrelations representing building's levels.
