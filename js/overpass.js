@@ -41,8 +41,8 @@ api.tagBuilding = function(id) {
 };
 
 api.tagRoom = function(latitude, longitude, salle){
-	return "(way(around:500,"+latitude+","+longitude+")['buildingpart'='room']['ref'='"+salle+"']->.a;.a >;.a <<;);"+
-		"out body qt;" ;
+	return "(way['room']['ref'='"+salle+"'](around:500,"+latitude+","+longitude+")->.a;way['buildingpart'='room']"+
+		"['ref'='"+salle+"'](around:500,"+latitude+","+longitude+")->.b;);(rel(bw.a);.a;.a >;.a <<;rel(bw.b);.b;.b >;.b <<);out body qt;"
 };
 
 api.loadRoom = function(latitude, longitude, salle) {
@@ -409,7 +409,6 @@ api.parseBuilding = function(data) {
 
 			if (key == "buildingpart" || key == "room")
 				way.type = value;
-
 			if (key == "shop" && value.match(/(bag|boutique|clothes|cosmetics|jewelry|perfumery|shoes)/))
 				way.category = "Fashion";
 			if (key == "shop" && value.match(/(antiques|art|bathroom_furnishing|bed|carpet|curtain|doityourself|furniture|hardware|interior_decoration|kitchen|pet)/))
@@ -432,13 +431,11 @@ api.parseBuilding = function(data) {
 			if((key =="amenity" || key =="room") && value.match(/(toilets)/))
 				way.category = "WC";
 
-			// if(key =="buildingpart" && value.match(/(verticalpassage)/))
-			// way.category = "Stairs" ;
-
 			/* Supports buildingpart:verticalpassage=stairs & highway=stairway */
-			if(key =="buildingpart:verticalpassage" || key =="highway")
+			if(key =="buildingpart:verticalpassage" || key =="highway"){
 				way.verticalpassage = value;
 				way.type = value;
+			}
 			if(key == "buildingpart:verticalpassage:floorrange")
 				way.range = value ;
 
