@@ -25,9 +25,9 @@ building.outline = function(coords) {
     });
   }
 
-  this.drawInside = function(){
-    new L.Polygon(this.coords,{color:'#B7C0BF',opacity:'0.5',fillOpacity:'0.5'}).addTo(api.layer.building).bringToBack();
-  }
+  //this.drawInside = function(){
+    //new L.Polygon(this.coords,{color:'#B7C0BF',opacity:'0',fillOpacity:'0'}).addTo(api.layer.building).bringToBack();
+  //}
 
 
   /** Center of outline **/
