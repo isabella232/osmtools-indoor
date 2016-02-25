@@ -26,7 +26,7 @@ building.outline = function(coords) {
   }
 
   this.drawInside = function(){
-    new L.Polygon(this.coords,{color:'#B7C0BF',opacity:'1',fillOpacity:'1'}).addTo(api.layer.building).bringToBack();
+    new L.Polygon(this.coords,{color:'#B7C0BF',opacity:'0.5',fillOpacity:'0.5'}).addTo(api.layer.building).bringToBack();
   }
 
 
